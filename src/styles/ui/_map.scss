@@ -1,0 +1,51 @@
+.mappings {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: 0;
+}
+
+#blank-map {
+  display: flex;
+  flex-direction: column;
+  background: var(--box-alt-background-color);
+  color: var(--text-secondary-color);
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing);
+}
+
+.blankmap-image {
+  width: 50%;
+}
+
+.mapping-container {
+  overflow-y: auto;
+  padding: var(--spacing-double);
+
+  .row-component:not(:last-child) {
+    margin-bottom: var(--spacing);
+  }
+
+  .select-component {
+    width: 100%;
+
+    label {
+      padding-right: var(--spacing);
+      width: 100%;
+      max-width: 25%;
+      display: inline-block;
+    }
+    div {
+      width: 100%;
+      max-width: 75%;
+      flex: 0 0 75%;
+
+      select {
+        width: 75%;
+      }
+    }
+  }
+}

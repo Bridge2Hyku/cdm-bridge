@@ -1,0 +1,112 @@
+#export-view {
+  justify-content: center;
+  align-self: center;
+  padding: var(--spacing-double);
+  align-items: center;
+
+  .title-container {
+    max-width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: var(--spacing);
+  }
+
+  .icon {
+    margin-right: var(--spacing);
+    flex: none;
+    margin-top: 4px;
+  }
+
+  .title {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-light);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .details {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  progress {
+    max-width: 100%;
+    width: 100%;
+    margin-bottom: var(--spacing);
+  }
+}
+
+.export-titlebar {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  margin-left: auto;
+  width: 230px;
+
+  .export-list-item {
+    cursor: pointer;
+    padding: 5px var(--spacing);
+
+    &:hover {
+      --text-color: var(--box-selected-active-text-color);
+      --text-secondary-color: var(--box-selected-active-text-color);
+      color: var(--text-color);
+      background-color: var(--box-selected-active-background-color);
+    }
+  }
+}
+
+.export-button{
+  width: 100%;
+  height: 100%;
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+    margin-right: var(--spacing);
+    position: relative;
+  }
+
+  &.open {
+    button,
+    button:focus,
+    button:not(:disabled):active,
+    button:not(:disabled):hover {
+      color: var(--text-color);
+      background-color: var(--background-color);
+      border-color: var(--background-color);
+    }
+  }
+
+  button {
+    display: flex;
+    flex-direction: row;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    border-radius: 0;
+    border-left: 1px solid var(--title-bar-border-color);
+    padding: var(--spacing) var(--spacing-double);
+    height: 100%;
+    width: 100%;
+    text-align: left;
+    font-weight: var(--font-weight-semibold);
+    color: var(--button-text-color);
+    
+    &:focus,
+    &:not(:disabled):active,
+    &:not(:disabled):hover {
+      border: none;
+      border-left: 1px solid var(--title-bar-border-color);
+      background-color: var(--button-hover-background);
+      box-shadow: none;
+    }
+  }
+}
+

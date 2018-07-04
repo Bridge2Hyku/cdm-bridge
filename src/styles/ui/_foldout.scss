@@ -1,0 +1,23 @@
+#foldout-container {
+  position: absolute;
+  top: 50px;
+  left: 0px;
+  width: 100%;
+  height: calc(100% - 50px);
+  z-index: var(--foldout-z-index);
+
+  .overlay {
+    background: var(--overlay-background-color);
+    height: 100%;
+  }
+
+  .foldout {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    min-width: 230px;
+    height: 100%;
+    background: var(--background-color);
+    color: var(--text-color);
+  }
+}

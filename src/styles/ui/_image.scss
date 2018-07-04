@@ -1,0 +1,7 @@
+svg.image {
+  fill: currentColor;
+  flex-shrink: 0;
+  &.icon {
+    height: 16px;
+  }
+}

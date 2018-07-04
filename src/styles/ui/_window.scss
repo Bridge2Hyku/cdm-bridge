@@ -1,0 +1,11 @@
+#app-title-bar {
+  width: 100%;
+  height: 50px;
+  background-color: var(--main-color);
+  border-bottom: 1px solid var(--title-bar-border-color);
+  display: flex;
+  flex-direction: row;
+  flex-grow: 0;
+  flex-shrink: 0;
+  min-width: 0;
+}

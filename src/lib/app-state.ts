@@ -1,3 +1,5 @@
+import { CdmServer } from './contentdm'
+
 export enum PopupType {
   Preferences
 }
@@ -9,6 +11,11 @@ export enum ViewType {
 
 export enum FoldoutType {
   Export
+}
+
+export type Field = {
+  readonly name: string,
+  readonly required: boolean
 }
 
 export type Popup = { type: PopupType.Preferences }
@@ -29,4 +36,9 @@ export interface IAppState {
 export interface IExportProgress {
   readonly value: number | undefined
   readonly description?: string
+}
+
+export interface IPreferences {
+  cdm: CdmServer
+  fields: Array<string>
 }

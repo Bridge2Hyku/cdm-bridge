@@ -4,7 +4,8 @@ import {
   PopupType,
   Foldout,
   ViewType,
-  IExportProgress
+  IExportProgress,
+  IPreferences,
 } from '../app-state'
 import { TypedBaseStore } from './base-store'
 import { 
@@ -18,13 +19,13 @@ import { Exporter } from '../export'
 import { remote } from 'electron'
 
 
-const defaultPreferences = {
-  'cdm': {
-    'hostname': '',
-    'port': '',
-    'ssl': false
+const defaultPreferences: IPreferences = {
+  cdm: {
+    hostname: '',
+    port: null,
+    ssl: false
   },
-  'fields': [
+  fields: [
     'Title',
     'Creator',
     'Keyword',
@@ -45,12 +46,11 @@ const defaultPreferences = {
   ]
 }
 
-
 export class AppStore extends TypedBaseStore<IAppState> {
 
   private emitQueued = false
 
-  private preferences: any = defaultPreferences
+  private preferences: IPreferences = defaultPreferences
   private currentPopup: Popup | null = null
   private currentFoldout: Foldout | null = null
   private collections: Array<CdmCollection> | null = null
@@ -80,7 +80,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.preferences = JSON.parse(
       String(localStorage.getItem('preferences'))
-    )
+    ) as IPreferences
+    
     this.collections = []
 
     this.crosswalk = JSON.parse(
@@ -175,7 +176,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     ssl: boolean
   ): Promise<any> {
     this.preferences.cdm.hostname = hostname
-    this.preferences.cdm.port = port
+    this.preferences.cdm.port = +port
     this.preferences.cdm.ssl = ssl
     localStorage.setItem('preferences', JSON.stringify(this.preferences))
 

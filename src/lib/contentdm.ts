@@ -2,9 +2,9 @@ import { get } from 'http';
 import { createWriteStream, existsSync, rename, } from 'fs';
 
 export type CdmServer = {
-  readonly hostname: string
-  readonly port: number
-  readonly ssl: boolean
+  hostname: string
+  port: number | null
+  ssl: boolean
 }
 
 export enum CdmType {

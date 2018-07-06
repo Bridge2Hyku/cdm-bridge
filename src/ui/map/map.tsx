@@ -121,7 +121,7 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
           value={this.state.value}
           onChange={this.onSelectedChanged}
         >
-          <option key="o-none" value="" disabled={true}>
+          <option key="o-none" value="">
             -- Select a field --
           </option>
           {options.map(f => (

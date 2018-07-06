@@ -97,7 +97,7 @@ export class Preferences extends React.Component<
           onTabClicked={this.onTabClicked}
           selectedIndex={this.state.selectedIndex}
         >
-          <span>ContentDM</span>
+          <span>CONTENTdm</span>
           <span>Export Fields</span>
         </TabBar>
         {this.renderActiveTab()}

@@ -176,7 +176,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     ssl: boolean
   ): Promise<any> {
     this.preferences.cdm.hostname = hostname
-    this.preferences.cdm.port = +port
+    this.preferences.cdm.port = Number(port)
     this.preferences.cdm.ssl = ssl
     localStorage.setItem('preferences', JSON.stringify(this.preferences))
 

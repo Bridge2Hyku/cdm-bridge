@@ -32,9 +32,9 @@ export class Preferences extends React.Component<
     this.state = {
       selectedIndex: PreferencesTab.ContentDM,
       contentDmHostname: this.props.preferences.cdm.hostname,
-      contentDmPort: this.props.preferences.cdm.port,
+      contentDmPort: this.props.preferences.cdm.port.toString(),
       contentDmSsl: this.props.preferences.cdm.ssl,
-      exportFields: this.props.preferences.fields.slice()
+      exportFields: Array.from(this.props.preferences.fields)
     }
   }
 

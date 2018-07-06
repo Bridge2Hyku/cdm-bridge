@@ -19,6 +19,8 @@ import { Exporter } from '../export'
 import { remote } from 'electron'
 
 
+const defaultSidebarWidth: number = 200
+
 const defaultFields: Array<string> = [
   'Title',
   'Creator',
@@ -63,6 +65,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private selectedView: ViewType | null = null
   private exportProgress: IExportProgress = {value: undefined}
   private errors: ReadonlyArray<Error> = new Array<Error>()
+  private sidebarWidth: number = defaultSidebarWidth
 
   protected emitUpdate() {
     if (this.emitQueued) {
@@ -100,6 +103,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       this._setCollections()
     }
 
+    this.sidebarWidth = parseInt(localStorage.getItem('sidebarWidth') || '', 10) || 
+      defaultSidebarWidth
+
     this.emitUpdateNow()
   }
 
@@ -114,7 +120,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedAlias: this.selectedAlias,
       selectedView: this.selectedView,
       exportProgress: this.exportProgress,
-      errors: this.errors
+      errors: this.errors,
+      sidebarWidth: this.sidebarWidth
     }
   }
 
@@ -143,6 +150,22 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
     this.currentFoldout = null
     this.emitUpdate()
+  }
+
+  public _setSidebarWidth(width: number): Promise<void> {
+    this.sidebarWidth = width
+    localStorage.setItem('sidebarWidth', width.toString())
+    this.emitUpdate()
+
+    return Promise.resolve()
+  }
+
+  public _resetSidebarWidth(): Promise<void> {
+    this.sidebarWidth = defaultSidebarWidth
+    localStorage.removeItem('sidebarWidth')
+    this.emitUpdate()
+
+    return Promise.resolve()
   }
 
   public async _setAlias(alias: string): Promise<void> {

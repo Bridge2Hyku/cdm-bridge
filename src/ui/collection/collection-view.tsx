@@ -5,14 +5,14 @@ import { Resizeable } from '../resizable';
 import { CdmCollection } from '../../lib/contentdm'
 import { Collections } from './collections'
 
-interface ICollectionViewProps { 
+interface ICollectionViewProps {
+  readonly sidebarWidth: number
   readonly dispatcher: Dispatcher
   collections: ReadonlyArray<CdmCollection>
   alias?: string
 }
 
 interface ICollectionViewState {
-  sidebarWidth: number
   maxSidebarWidth: number
   minSidebarWidth: number
   selectedAlias: string
@@ -23,13 +23,10 @@ export class CollectionView extends React.Component<
   ICollectionViewState
 > {
 
-  private defaultSidebarWidth: number = 200
-
   public constructor(props: any) {
     super(props)
 
     this.state = {
-      sidebarWidth: this.defaultSidebarWidth,
       maxSidebarWidth: 400,
       minSidebarWidth: 30,
       selectedAlias: this.props.alias || ''
@@ -37,11 +34,11 @@ export class CollectionView extends React.Component<
   }
 
   private handleSidebarResize = (width: number) => {
-    this.setState({sidebarWidth: width});
+    this.props.dispatcher.setSidebarWidth(width)
   }
-
+  
   private handleSidebarReset = () => {
-    this.setState({sidebarWidth: this.defaultSidebarWidth})
+    this.props.dispatcher.resetSidebarWidth()
   }
 
   private onCollectionClicked = (alias: string) => {
@@ -54,7 +51,7 @@ export class CollectionView extends React.Component<
     return (
       <Resizeable
         id="collection-sidebar"
-        width={this.state.sidebarWidth}
+        width={this.props.sidebarWidth}
         maximumWidth={this.state.maxSidebarWidth}
         minimumWidth={this.state.minSidebarWidth}
         onResize={this.handleSidebarResize}

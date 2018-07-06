@@ -32,6 +32,7 @@ export interface IAppState {
   readonly selectedView: ViewType | null
   readonly exportProgress: IExportProgress
   readonly errors: ReadonlyArray<Error>
+  readonly sidebarWidth: number
 }
 
 export interface IExportProgress {

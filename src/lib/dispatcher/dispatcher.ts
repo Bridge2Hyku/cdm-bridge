@@ -61,4 +61,12 @@ export class Dispatcher {
   public clearError(error: Error): Promise<void> {
     return this.appStore._clearError(error)
   }
+
+  public setSidebarWidth(width: number): Promise<void> {
+    return this.appStore._setSidebarWidth(width)
+  }
+
+  public resetSidebarWidth(): Promise<void> {
+    return this.appStore._resetSidebarWidth()
+  }
 }

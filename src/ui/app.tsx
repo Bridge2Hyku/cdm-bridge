@@ -150,6 +150,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     return (
       <UiView id="collections">
         <CollectionView 
+          sidebarWidth={state.sidebarWidth}
           dispatcher={this.props.dispatcher}
           collections={this.getCollections()}
           alias={this.getCollectionAlias()}

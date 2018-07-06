@@ -19,31 +19,33 @@ import { Exporter } from '../export'
 import { remote } from 'electron'
 
 
+const defaultFields: Array<string> = [
+  'Title',
+  'Creator',
+  'Keyword',
+  'Rights statement',
+  'Contributor',
+  'Abstract / Summary',
+  'License',
+  'Publisher',
+  'Date created',
+  'Subject',
+  'Language',
+  'Identifier',
+  'Location',
+  'Related URL',
+  'Source',
+  'Resource type',
+  'Extent'
+]
+
 const defaultPreferences: IPreferences = {
   cdm: {
     hostname: '',
     port: null,
     ssl: false
   },
-  fields: [
-    'Title',
-    'Creator',
-    'Keyword',
-    'Rights statement',
-    'Contributor',
-    'Abstract / Summary',
-    'License',
-    'Publisher',
-    'Date created',
-    'Subject',
-    'Language',
-    'Identifier',
-    'Location',
-    'Related URL',
-    'Source',
-    'Resource type',
-    'Extent'
-  ]
+  fields: defaultFields
 }
 
 export class AppStore extends TypedBaseStore<IAppState> {

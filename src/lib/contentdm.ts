@@ -1,5 +1,5 @@
-import { get } from 'http';
-import { createWriteStream, existsSync, rename, } from 'fs';
+import { get } from 'http'
+import { createWriteStream, existsSync, rename, } from 'fs'
 
 export type CdmServer = {
   hostname: string
@@ -65,29 +65,30 @@ export class ContentDm {
 
   public download(file: any, location: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      let url = this._fileUrl(file.alias, file.pointer);
-      let destination = location + '/' + file.filename;
-      let part = destination + '.part';
+      let url = this._fileUrl(file.alias, file.pointer)
+      let destination = location + '/' + file.filename
+      let part = destination + '.part'
 
       if (existsSync(destination)) {
-        resolve();
+        resolve()
       }
 
-      let output = createWriteStream(part);
+      let output = createWriteStream(part)
       get(url, (response) => {
-        response.pipe(output);
+        response.pipe(output)
         output.on('finish', () => {
-          output.close();
-          rename(part, destination, (err) => {
-            if (err) {
-              console.error(err);
-              reject(err);
+          output.close()
+          rename(part, destination, (e) => {
+            if (e) {
+              reject(e)
             }
-            resolve();
-          });
-        });
-      });
-    });
+            resolve()
+          })
+        })
+      }).on('error', (e) => {
+        reject(e)
+      })
+    })
   }
 
   public _request(fnc: string, params?: Array<string>): Promise<any> {
@@ -122,6 +123,8 @@ export class ContentDm {
             reject(e)
           }
         })
+      }).on('error', (e) => {
+        reject(e)
       })
     })
   }
@@ -133,7 +136,7 @@ export class ContentDm {
 
     return 'http' + (this.server.ssl ? 's' : '') + '://' +
     this.server.hostname + ':' + this.server.port +
-      '/cgi-bin/showfile.exe?CISOROOT=' + alias + '&CISOPTR=' + pointer;
+      '/cgi-bin/showfile.exe?CISOROOT=' + alias + '&CISOPTR=' + pointer
   }
 
   private _endpoint(): string {

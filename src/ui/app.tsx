@@ -3,7 +3,7 @@ import { ipcRenderer } from 'electron'
 import { CSSTransitionGroup } from 'react-transition-group'
 
 import { TitleBar } from './window';
-import { CollectionView } from './collection';
+import { CollectionView } from './collection'
 import { MapView } from './map'
 import { UiView } from './ui-view';
 import { MenuEvent } from '../main/menu'
@@ -13,11 +13,13 @@ import {
   IAppState, 
   PopupType,
   FoldoutType,
-  ViewType 
+  ViewType ,
+  Popup
 } from '../lib/app-state'
 import { Preferences } from './preferences'
 import { ExportView, DropdownState, ExportDropdown } from './export'
-import { CdmCollection, CdmFieldInfo } from '../lib/contentdm';
+import { CdmCollection, CdmFieldInfo } from '../lib/contentdm'
+import { AppError } from './app-error'
 
 interface IAppProps {
   readonly appStore: AppStore
@@ -163,6 +165,22 @@ export class App extends React.Component<IAppProps, IAppState> {
     )
 
   }
+
+  private renderAppError() {
+    return (
+      <AppError
+        errors={this.state.errors}
+        onClearError={this.clearError}
+        onShowPopup={this.showPopup}
+      />
+    )
+  }
+
+  private clearError = (error: Error) => this.props.dispatcher.clearError(error)
+
+  private showPopup = (popup: Popup) => {
+    this.props.dispatcher.showPopup(popup)
+  }
   
   public render() {
     const disabled = this.state.selectedView === ViewType.Export
@@ -185,6 +203,7 @@ export class App extends React.Component<IAppProps, IAppState> {
         </TitleBar>
         {this.renderApp()}
         {this.renderPopup()}
+        {this.renderAppError()}
       </div>
     )
   }

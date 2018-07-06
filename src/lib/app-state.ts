@@ -31,6 +31,7 @@ export interface IAppState {
   readonly selectedAlias: string
   readonly selectedView: ViewType | null
   readonly exportProgress: IExportProgress
+  readonly errors: ReadonlyArray<Error>
 }
 
 export interface IExportProgress {

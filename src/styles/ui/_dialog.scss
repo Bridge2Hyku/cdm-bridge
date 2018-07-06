@@ -2,6 +2,7 @@ dialog {
   --dialog-icon-alert: url('data:image/svg+xml;utf8,<svg height="24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m 12,1.5 c -0.5,0 -1.5,0 -2,1 L 5,11 0.33203125,19.234375 C -0.5,21 0.5,23 2.4902344,23 L 12,23 21.509766,23 C 23.5,23 24.5,21 23.667969,19.234375 L 19,11 14,2.5 c -0.5,-1 -1.5,-1 -2,-1 z m -1,5.5 2,0 0,8 -2,0 z m 0,10 2,0 0,2 -2,0 z" /></svg>');
   --dialog-icon-stop: url('data:image/svg+xml;utf8,<svg height="24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m 16,2 -9,0 -6,6 0,9 6,6 9,0 6,-6 0,-9 z m 4.5,14.25 -5.25,5.25 -7.5,0 -5.25,-5.25 0,-7.5 5.25,-5.25 7.5,0 5.25,5.25 z M 10,6 l 3,0 0,8 -3,0 z m 0,10 3,0 0,3 -3,0 z" /></svg>');
   --dialog-icon-size: 24px;
+
   border: var(--base-border);
   box-shadow: var(--base-box-shadow);
   padding: 0;
@@ -130,6 +131,44 @@ dialog {
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
+    }
+  }
+
+  &.error {
+    .dialog-content {
+      position: relative;
+      margin-left: var(--spacing-double);
+      padding-left: calc(var(--spacing-double) + var(--dialog-icon-size));
+      min-height: calc(var(--spacing-double) * 2 + var(--spacing-half) + var(--dialog-icon-size));
+
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        height: 24px;
+        width: 24px;
+        -webkit-mask-repeat: no-repeat;
+        mask-repeat: no-repeat;
+        background-color: var(--dialog-error-color);
+        -webkit-mask: var(--dialog-icon-stop);
+        mask: var(--dialog-icon-stop);
+      }
+
+    }
+  }
+
+  &#app-error {
+    .dialog-content {
+      p {
+        margin-top: 0;
+        -webkit-user-select: auto;
+        user-select: auto;
+        cursor: text;
+        white-space: pre-wrap;
+        max-height: 400px;
+        overflow-y: auto;
+      }
     }
   }
 

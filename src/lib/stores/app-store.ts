@@ -62,6 +62,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private selectedAlias: string = ''
   private selectedView: ViewType | null = null
   private exportProgress: IExportProgress = {value: undefined}
+  private errors: ReadonlyArray<Error> = new Array<Error>()
 
   protected emitUpdate() {
     if (this.emitQueued) {
@@ -112,7 +113,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       crosswalk: this.crosswalk,
       selectedAlias: this.selectedAlias,
       selectedView: this.selectedView,
-      exportProgress: this.exportProgress
+      exportProgress: this.exportProgress,
+      errors: this.errors
     }
   }
 
@@ -221,8 +223,28 @@ export class AppStore extends TypedBaseStore<IAppState> {
     
     return cdm.collections(CdmType.Unpublished)
       .then(data => this.collections = data)
-      .catch(() => this.collections = null)
+      .catch((error) => {
+        this.collections = null
+        this._pushError(error)
+        return
+      })
       .then(() => this.emitUpdate())
+  }
+
+  public _pushError(error: Error): Promise<void> {
+    const newErrors = Array.from(this.errors)
+    newErrors.push(error)
+    this.errors = newErrors
+    this.emitUpdate()
+
+    return Promise.resolve()
+  }
+
+  public _clearError(error: Error): Promise<void> {
+    this.errors = this.errors.filter(e => e !== error)
+    this.emitUpdate()
+
+    return Promise.resolve()
   }
 
   public async _export(location: string, download?: boolean): Promise<void> {

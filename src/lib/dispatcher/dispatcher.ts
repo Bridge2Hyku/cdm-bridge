@@ -53,4 +53,12 @@ export class Dispatcher {
       .then(location => this.appStore._export(location, download))
       .catch((reason) => console.warn(reason))
   }
+
+  public presentError(error: Error): Promise<void> {
+    return this.appStore._pushError(error)
+  }
+
+  public clearError(error: Error): Promise<void> {
+    return this.appStore._clearError(error)
+  }
 }

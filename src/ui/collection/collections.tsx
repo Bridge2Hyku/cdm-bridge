@@ -30,6 +30,10 @@ export class Collections extends React.Component<ICollectionsProps, {}> {
   }
 
   private renderItems() {
+    if (!this.props.collections) {
+      return null
+    }
+
     return this.props.collections.map((child, index) => {
       const selected = child.alias === this.props.selectedAlias
       return (

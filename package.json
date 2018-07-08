@@ -1,6 +1,7 @@
 {
   "name": "cdm-bridge",
   "productName": "CDM Bridge",
+  "description": "A open source Electron-based CONTENTdm migration tool.",
   "author": {
     "name": "Sean Watkins",
     "email": "slwatkins@uh.edu"

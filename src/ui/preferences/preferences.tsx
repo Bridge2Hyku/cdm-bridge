@@ -89,7 +89,8 @@ export class Preferences extends React.Component<
   }
 
   private onReset = () => {
-    this.setState({ exportFields: this.state.defaultFields })
+    const newFields = Array.from(this.state.defaultFields)
+    this.setState({ exportFields: newFields })
   }
 
   public render() {

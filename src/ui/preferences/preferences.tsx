@@ -11,6 +11,7 @@ import { Fields } from './fields'
 interface IPreferencesProps {
   readonly dispatcher: Dispatcher
   readonly preferences: any
+  readonly defaultFields: Array<string>
   readonly onDismissed: () => void
 }
 
@@ -20,6 +21,7 @@ interface IPreferencesState {
   readonly contentDmPort: string
   readonly contentDmSsl: boolean
   readonly exportFields: Array<string>
+  readonly defaultFields: Array<string>
 }
 
 export class Preferences extends React.Component<
@@ -34,7 +36,8 @@ export class Preferences extends React.Component<
       contentDmHostname: this.props.preferences.cdm.hostname,
       contentDmPort: this.props.preferences.cdm.port.toString(),
       contentDmSsl: this.props.preferences.cdm.ssl,
-      exportFields: Array.from(this.props.preferences.fields)
+      exportFields: Array.from(this.props.preferences.fields),
+      defaultFields: Array.from(this.props.defaultFields)
     }
   }
 
@@ -85,6 +88,10 @@ export class Preferences extends React.Component<
     })
   }
 
+  private onReset = () => {
+    this.setState({ exportFields: this.state.defaultFields })
+  }
+
   public render() {
     return (
       <Dialog
@@ -102,13 +109,36 @@ export class Preferences extends React.Component<
         </TabBar>
         {this.renderActiveTab()}
         <DialogFooter>
+          {this.renderActiveButtons()}
+        </DialogFooter>
+      </Dialog>
+    )
+  }
+
+  private renderActiveButtons() {
+    const index = this.state.selectedIndex
+    switch(index) {
+      case PreferencesTab.ContentDM:
+        return (
           <ButtonGroup>
             <Button type="submit">Save</Button>
             <Button onClick={this.props.onDismissed}>Cancel</Button>
           </ButtonGroup>
-        </DialogFooter>
-      </Dialog>
-    )
+        )
+      case PreferencesTab.Fields:
+        return (
+          <ButtonGroup>
+            <Button
+              className="reset"
+              onClick={this.onReset}
+            >
+              Reset Fields
+            </Button>
+            <Button onClick={this.props.onDismissed}>Cancel</Button>
+            <Button type="submit">Save</Button>
+          </ButtonGroup>
+        )
+    }
   }
 
   private renderActiveTab() {

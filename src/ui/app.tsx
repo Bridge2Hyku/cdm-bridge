@@ -101,6 +101,7 @@ export class App extends React.Component<IAppProps, IAppState> {
           <Preferences
             dispatcher={this.props.dispatcher}
             preferences={this.state.preferences}
+            defaultFields={this.state.defaultFields}
             onDismissed={this.onPopupDismissed}
           />
         )

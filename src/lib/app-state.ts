@@ -33,6 +33,7 @@ export interface IAppState {
   readonly exportProgress: IExportProgress
   readonly errors: ReadonlyArray<Error>
   readonly sidebarWidth: number
+  readonly defaultFields: Array<string>
 }
 
 export interface IExportProgress {

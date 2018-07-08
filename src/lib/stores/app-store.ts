@@ -66,6 +66,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private exportProgress: IExportProgress = {value: undefined}
   private errors: ReadonlyArray<Error> = new Array<Error>()
   private sidebarWidth: number = defaultSidebarWidth
+  private defaultFields: Array<string> = defaultFields
 
   protected emitUpdate() {
     if (this.emitQueued) {
@@ -106,6 +107,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.sidebarWidth = parseInt(localStorage.getItem('sidebarWidth') || '', 10) || 
       defaultSidebarWidth
 
+    this.defaultFields = defaultFields
+
     this.emitUpdateNow()
   }
 
@@ -121,7 +124,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedView: this.selectedView,
       exportProgress: this.exportProgress,
       errors: this.errors,
-      sidebarWidth: this.sidebarWidth
+      sidebarWidth: this.sidebarWidth,
+      defaultFields: this.defaultFields
     }
   }
 

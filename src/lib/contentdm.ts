@@ -36,7 +36,7 @@ export type CdmFieldInfo = {
 }
 
 export class ContentDm {
-  public constructor(public server: CdmServer | null) {}
+  public constructor(public server: CdmServer | null) { }
 
   public async collections(published?: CdmType): Promise<any> {
     return this._request('dmGetCollectionList', [String(published)])
@@ -106,7 +106,7 @@ export class ContentDm {
 
         if (statusCode !== 200) {
           const error = new Error('Request Failed.\n' +
-          `Status Code: ${statusCode}`
+            `Status Code: ${statusCode}`
           )
           console.error(error.message)
           reject(error)
@@ -119,7 +119,7 @@ export class ContentDm {
             const data = JSON.parse(rawData)
             resolve(data)
           }
-          catch(e) {
+          catch (e) {
             reject(e)
           }
         })
@@ -135,7 +135,7 @@ export class ContentDm {
     }
 
     return 'http' + (this.server.ssl ? 's' : '') + '://' +
-    this.server.hostname + ':' + this.server.port +
+      this.server.hostname + ':' + this.server.port +
       '/cgi-bin/showfile.exe?CISOROOT=' + alias + '&CISOPTR=' + pointer
   }
 

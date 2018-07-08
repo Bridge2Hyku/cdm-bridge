@@ -8,7 +8,7 @@ interface IContentDmProps {
   readonly hostname: string
   readonly port: string
   readonly ssl: boolean
-  
+
   readonly onHostnameChanged: (hostname: string) => void
   readonly onPortChanged: (port: string) => void
   readonly onSslChanged: (ssl: boolean) => void

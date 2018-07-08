@@ -22,7 +22,7 @@ export class Dialog extends React.Component<IDialogProps, IDialogState> {
   private dialogElement: HTMLElement | null = null
 
   public componentDidMount() {
-    ;(this.dialogElement as any).showModal()
+    ; (this.dialogElement as any).showModal()
   }
 
   private onDialogClick = (e: React.MouseEvent<HTMLElement>) => {

@@ -2,7 +2,7 @@ import * as stringify from 'csv-stringify';
 
 export function csvString(data: any): Promise<any> {
   return new Promise((resolve, reject) => {
-    const csv: stringify.Stringifier = stringify({delimiter: ','})
+    const csv: stringify.Stringifier = stringify({ delimiter: ',' })
     let csvData: string = ''
 
     csv.on('readable', () => {
@@ -19,4 +19,4 @@ export function csvString(data: any): Promise<any> {
     data.map((row: any) => csv.write(row))
     csv.end()
   })
-}
+} 

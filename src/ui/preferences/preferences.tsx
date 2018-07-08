@@ -25,9 +25,9 @@ interface IPreferencesState {
 }
 
 export class Preferences extends React.Component<
-  IPreferencesProps, 
+  IPreferencesProps,
   IPreferencesState
-> {
+  > {
   public constructor(props: IPreferencesProps) {
     super(props)
 
@@ -41,7 +41,7 @@ export class Preferences extends React.Component<
     }
   }
 
-  private onSave = async() => {
+  private onSave = async () => {
     this.props.dispatcher.setPreferencesContentDm(
       this.state.contentDmHostname,
       this.state.contentDmPort,
@@ -63,7 +63,7 @@ export class Preferences extends React.Component<
   }
 
   private onSslChanged = (ssl: boolean) => {
-    this.setState({ contentDmSsl: ssl})
+    this.setState({ contentDmSsl: ssl })
   }
 
   private onFieldValueChanged = (index: number, value: string) => {
@@ -75,15 +75,15 @@ export class Preferences extends React.Component<
   private onFieldInsert = (index: number) => {
     const state = this.state
     state.exportFields.splice(index + 1, 0, '')
-    this.setState({ 
-      exportFields: state.exportFields 
+    this.setState({
+      exportFields: state.exportFields
     })
   }
 
   private onFieldRemove = (index: number) => {
     const state = this.state
-    state.exportFields.splice(index, 1) 
-    this.setState({ 
+    state.exportFields.splice(index, 1)
+    this.setState({
       exportFields: state.exportFields
     })
   }
@@ -118,7 +118,7 @@ export class Preferences extends React.Component<
 
   private renderActiveButtons() {
     const index = this.state.selectedIndex
-    switch(index) {
+    switch (index) {
       case PreferencesTab.ContentDM:
         return (
           <ButtonGroup>
@@ -144,7 +144,7 @@ export class Preferences extends React.Component<
 
   private renderActiveTab() {
     const index = this.state.selectedIndex
-    switch(index) {
+    switch (index) {
       case PreferencesTab.ContentDM:
         return (
           <ContentDm
@@ -168,7 +168,7 @@ export class Preferences extends React.Component<
         )
     }
   }
-  
+
   private onTabClicked = (index: number) => {
     this.setState({ selectedIndex: index })
   }

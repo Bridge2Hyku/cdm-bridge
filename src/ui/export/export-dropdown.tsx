@@ -14,7 +14,7 @@ interface IExportDropdownProps {
 
 export class ExportDropdown extends React.Component<IExportDropdownProps, {}> {
   private onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const newState: DropdownState = 
+    const newState: DropdownState =
       this.props.dropdownState === 'open' ? 'closed' : 'open'
 
     this.props.dropdownStateChanged(newState)
@@ -50,7 +50,7 @@ export class ExportDropdown extends React.Component<IExportDropdownProps, {}> {
           className="foldout"
           onKeyDown={this.onFoldoutKeyDown}
         >
-          <ExportDropdownList 
+          <ExportDropdownList
             onSelectExport={this.props.onSelectExport}
           />
         </div>
@@ -76,7 +76,7 @@ export class ExportDropdown extends React.Component<IExportDropdownProps, {}> {
   }
 }
 
-interface IExportDropdownListProps { 
+interface IExportDropdownListProps {
   readonly onSelectExport: (download?: boolean) => void
 }
 
@@ -95,14 +95,14 @@ export class ExportDropdownList extends React.Component<IExportDropdownListProps
       <div
         className="export-list"
       >
-        <div 
+        <div
           key="metadata"
           className="export-list-item"
           onClick={this.onExportMetadata}
         >
           Metadata Only
         </div>
-        <div 
+        <div
           key="files"
           className="export-list-item"
           onClick={this.onExportFiles}

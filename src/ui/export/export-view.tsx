@@ -16,7 +16,7 @@ export class ExportView extends React.Component<IExportViewProps, {}>{
         <div className="title-container">
           <FontAwesomeIcon
             className="icon"
-            icon={Icons.faCompass} 
+            icon={Icons.faCompass}
             size="5x"
           />
           <div className="title">Exporting Collection</div>

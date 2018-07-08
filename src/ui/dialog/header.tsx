@@ -18,8 +18,8 @@ export class DialogHeader extends React.Component<IDialogHeaderProps> {
 
     return (
       <a className="close" onClick={this.onCloseButtonClick}>
-        <FontAwesomeIcon 
-          icon={Icons.faTimes} 
+        <FontAwesomeIcon
+          icon={Icons.faTimes}
           size="lg"
         />
       </a>

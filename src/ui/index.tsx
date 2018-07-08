@@ -12,6 +12,6 @@ const appStore = new AppStore()
 const dispatcher = new Dispatcher(appStore)
 
 ReactDOM.render(
-  <App dispatcher={dispatcher} appStore={appStore} />, 
+  <App dispatcher={dispatcher} appStore={appStore} />,
   document.getElementById("app")
 )

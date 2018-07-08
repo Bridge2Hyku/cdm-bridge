@@ -1,6 +1,6 @@
-import { 
-  IAppState, 
-  Popup, 
+import {
+  IAppState,
+  Popup,
   PopupType,
   Foldout,
   ViewType,
@@ -8,10 +8,10 @@ import {
   IPreferences,
 } from '../app-state'
 import { TypedBaseStore } from './base-store'
-import { 
-  ContentDm, 
-  CdmType, 
-  CdmServer, 
+import {
+  ContentDm,
+  CdmType,
+  CdmServer,
   CdmCollection,
   CdmFieldInfo
 } from '../contentdm'
@@ -63,7 +63,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private crosswalk: any | null = null
   private selectedAlias: string = ''
   private selectedView: ViewType | null = null
-  private exportProgress: IExportProgress = {value: undefined}
+  private exportProgress: IExportProgress = { value: undefined }
   private errors: ReadonlyArray<Error> = new Array<Error>()
   private sidebarWidth: number = defaultSidebarWidth
   private defaultFields: Array<string> = defaultFields
@@ -88,7 +88,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.preferences = JSON.parse(
       String(localStorage.getItem('preferences'))
     ) as IPreferences
-    
+
     this.collections = []
 
     this.crosswalk = JSON.parse(
@@ -104,10 +104,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
       this._setCollections()
     }
 
-    this.sidebarWidth = parseInt(localStorage.getItem('sidebarWidth') || '', 10) || 
+    this.sidebarWidth = parseInt(localStorage.getItem('sidebarWidth') || '', 10) ||
       defaultSidebarWidth
-
-    this.defaultFields = defaultFields
 
     this.emitUpdateNow()
   }
@@ -178,8 +176,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
   }
 
   public _setCrosswalk(
-    alias: string, 
-    field: string, 
+    alias: string,
+    field: string,
     value: string
   ): Promise<void> {
     if (!this.crosswalk) {
@@ -202,7 +200,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   }
 
   public _setPreferencesContentDm(
-    hostname: string, 
+    hostname: string,
     port: string,
     ssl: boolean
   ): Promise<any> {
@@ -238,7 +236,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public _setCollectionFieldInfo(alias: string): Promise<any> {
     this.selectedAlias = alias
     const cdm = new ContentDm(this.contentdmServer)
-    
+
     return cdm.collectionFieldInfo(alias)
       .then(data => this.collectionFieldInfo = data)
       .catch(() => this.collectionFieldInfo = null)
@@ -247,7 +245,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   private async _setCollections(): Promise<void> {
     const cdm = new ContentDm(this.contentdmServer)
-    
+
     return cdm.collections(CdmType.Unpublished)
       .then(data => this.collections = data)
       .catch((error) => {
@@ -280,24 +278,24 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
 
     exporter.export(
-      this.selectedAlias, 
-      location, 
+      this.selectedAlias,
+      location,
       download || false,
       this.preferences.fields,
       this.crosswalk[this.selectedAlias],
       (progress) => {
         this.exportProgress = progress
-        this.emitUpdate()    
+        this.emitUpdate()
       }
     )
-    .then(() => {
-      this.selectedView = ViewType.Collection
-      this.emitUpdate()
-    })
-    .catch(() => {
-      this.selectedView = ViewType.Collection
-      this.emitUpdate()
-    })
+      .then(() => {
+        this.selectedView = ViewType.Collection
+        this.emitUpdate()
+      })
+      .catch(() => {
+        this.selectedView = ViewType.Collection
+        this.emitUpdate()
+      })
 
 
     return Promise.resolve()

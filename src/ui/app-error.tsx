@@ -2,8 +2,8 @@ import * as React from 'react'
 
 import { Popup } from '../lib/app-state'
 import {
-  dialogTransitionEnterTimeout, 
-  dialogTransitionLeaveTimeout  
+  dialogTransitionEnterTimeout,
+  dialogTransitionLeaveTimeout
 } from './app'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { Dialog, DialogContent, DialogFooter } from './dialog';

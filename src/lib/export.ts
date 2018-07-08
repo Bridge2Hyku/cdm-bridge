@@ -16,7 +16,7 @@ export class Exporter {
 
   public async export(
     alias: string,
-    location: string, 
+    location: string,
     download: boolean,
     fields: Array<string>,
     crosswalk: any,
@@ -24,7 +24,7 @@ export class Exporter {
   ): Promise<void> {
     this.exportAlias = alias
     this.exportCrosswalk = crosswalk
-    progressCallback({ value: undefined, description: 'Getting item records'})
+    progressCallback({ value: undefined, description: 'Getting item records' })
 
     this.files = []
 
@@ -44,7 +44,7 @@ export class Exporter {
       }).then(() => {
         if (download && this.files) {
           return this._downloadFiles(
-            this.files, 
+            this.files,
             location,
             progressCallback
           )
@@ -54,28 +54,28 @@ export class Exporter {
   }
 
   private async records(
-    alias: string, 
-    start: number = 1, 
+    alias: string,
+    start: number = 1,
     prevData?: any
   ): Promise<any> {
     alias = alias.replace('/', '')
     const s = String(start)
 
     return this.cdm._request(
-      'dmQuery', 
-      [alias,'0','0','filetype','1024',s,'0','0','0','0','1','0']
+      'dmQuery',
+      [alias, '0', '0', 'filetype', '1024', s, '0', '0', '0', '0', '1', '0']
     )
-    .then((data) => {
-      if (prevData) {
-        data.records = data.records.concat(prevData.records)
-      }
-      if (data.pager.total >= start + 1024) {
-        return this.records(alias, start + 1025, data)
-      }
-      else {
-        return data
-      }
-    })
+      .then((data) => {
+        if (prevData) {
+          data.records = data.records.concat(prevData.records)
+        }
+        if (data.pager.total >= start + 1024) {
+          return this.records(alias, start + 1025, data)
+        }
+        else {
+          return data
+        }
+      })
   }
 
   private async getRecord(record: any): Promise<any> {
@@ -114,7 +114,7 @@ export class Exporter {
     let mapItem: any = []
     for (let key of fields) {
       const nick = this.exportCrosswalk[key]
-      mapItem.push((typeof item[nick] === 'string') ? item[nick]: '')
+      mapItem.push((typeof item[nick] === 'string') ? item[nick] : '')
     }
     return ['GenericWork', ''].concat(mapItem)
   }
@@ -126,17 +126,17 @@ export class Exporter {
   ): Promise<any> {
     let count = 0
     let items: Array<any> = [['Object Type', 'Filename']
-    .concat(
-      fields.map((key) => {
-        return key;
-      })
-    )]
+      .concat(
+        fields.map((key) => {
+          return key;
+        })
+      )]
 
     return records.reduce((p: any, record: any) => {
       return p.then(() => {
         count++
         const progressValue = count / records.length
-        progressCallback({ 
+        progressCallback({
           value: progressValue,
           description: 'Mapping item ' + count + ' of ' + records.length
         })
@@ -148,11 +148,12 @@ export class Exporter {
               items.push(['File', file.filename])
             })
           })
-      })}, Promise.resolve()
+      })
+    }, Promise.resolve()
     )
-    .then(() => {
-      return items
-    })
+      .then(() => {
+        return items
+      })
   }
 
   private _downloadFiles(
@@ -165,9 +166,9 @@ export class Exporter {
       return p.then(() => {
         count++
         const progressValue = count / files.length
-        progressCallback({ 
-          value: progressValue, 
-          description: 'Downloading file ' + count + ' of ' + files.length 
+        progressCallback({
+          value: progressValue,
+          description: 'Downloading file ' + count + ' of ' + files.length
         })
         return this.cdm.download(file, dirname(location))
       })

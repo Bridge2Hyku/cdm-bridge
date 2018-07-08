@@ -37,7 +37,7 @@ export class Map extends React.Component<IMapProps, {}> {
       })
       return cw
     }
-    
+
     return crosswalk[alias]
   }
 
@@ -116,20 +116,20 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
     }
 
     return (
-        <Select
-          label={this.props.fieldName}
-          value={this.state.value}
-          onChange={this.onSelectedChanged}
-        >
-          <option key="o-none" value="">
-            -- Select a field --
+      <Select
+        label={this.props.fieldName}
+        value={this.state.value}
+        onChange={this.onSelectedChanged}
+      >
+        <option key="o-none" value="">
+          -- Select a field --
           </option>
-          {options.map(f => (
-            <option key={f.nick} value={f.nick}>
-              {f.name}
-            </option>
-          ))}    
-        </Select> 
+        {options.map(f => (
+          <option key={f.nick} value={f.nick}>
+            {f.name}
+          </option>
+        ))}
+      </Select>
     )
   }
 

@@ -7,7 +7,7 @@ export function encodePathAsUrl(...pathSegments: string[]): string {
 }
 
 export function staticPath(): string {
-  return process.env.NODE_ENV === 'development' ? 
-    __static : 
+  return process.env.NODE_ENV === 'development' ?
+    __static :
     Path.dirname(__dirname) + '/static'
 }

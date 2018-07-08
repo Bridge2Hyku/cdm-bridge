@@ -9,11 +9,11 @@ import { UiView } from './ui-view';
 import { MenuEvent } from '../main/menu'
 import { Dispatcher } from '../lib/dispatcher'
 import { AppStore } from '../lib/stores'
-import { 
-  IAppState, 
+import {
+  IAppState,
   PopupType,
   FoldoutType,
-  ViewType ,
+  ViewType,
   Popup
 } from '../lib/app-state'
 import { Preferences } from './preferences'
@@ -50,7 +50,7 @@ export class App extends React.Component<IAppProps, IAppState> {
   }
 
   private onMenuEvent(name: MenuEvent): any {
-    switch(name) {
+    switch (name) {
       case 'show-preferences':
         return this.props.dispatcher.showPopup({ type: PopupType.Preferences })
     }
@@ -95,7 +95,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       return null
     }
 
-    switch(popup.type) {
+    switch (popup.type) {
       case PopupType.Preferences:
         return (
           <Preferences
@@ -150,13 +150,13 @@ export class App extends React.Component<IAppProps, IAppState> {
 
     return (
       <UiView id="collections">
-        <CollectionView 
+        <CollectionView
           sidebarWidth={state.sidebarWidth}
           dispatcher={this.props.dispatcher}
           collections={this.getCollections()}
           alias={this.getCollectionAlias()}
         />
-        <MapView 
+        <MapView
           dispatcher={this.props.dispatcher}
           fields={this.getFields()}
           collectionFieldInfo={this.getCollectionFieldInfo()}
@@ -183,14 +183,14 @@ export class App extends React.Component<IAppProps, IAppState> {
   private showPopup = (popup: Popup) => {
     this.props.dispatcher.showPopup(popup)
   }
-  
+
   public render() {
     const disabled = this.state.selectedView === ViewType.Export
       || this.state.selectedAlias === ''
-    const isOpen = 
+    const isOpen =
       this.state.currentFoldout &&
       this.state.currentFoldout.type === FoldoutType.Export
-    
+
     const currentState: DropdownState = isOpen ? 'open' : 'closed'
 
     return (

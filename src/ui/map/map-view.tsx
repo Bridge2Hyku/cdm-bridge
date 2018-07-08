@@ -18,8 +18,8 @@ export class MapView extends React.Component<IMapProps, {}> {
   private renderMap() {
     if (!this.props.collectionFieldInfo) {
       return this.renderMapEmpty()
-    } 
-    
+    }
+
     return (
       <Map
         dispatcher={this.props.dispatcher}

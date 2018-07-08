@@ -9,7 +9,7 @@ const __DEV__ = process.env.NODE_ENV === 'development'
 
 export class AppWindow {
   private window: Electron.BrowserWindow
-  
+
   private minWidth: number = 992
   private minHeight: number = 600
 
@@ -61,7 +61,7 @@ export class AppWindow {
     if (__DEV__) {
       this.window.webContents.openDevTools()
     }
-  
+
     if (__DEV__) {
       this.window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
     }

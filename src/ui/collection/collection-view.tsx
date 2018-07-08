@@ -21,7 +21,7 @@ interface ICollectionViewState {
 export class CollectionView extends React.Component<
   ICollectionViewProps,
   ICollectionViewState
-> {
+  > {
 
   public constructor(props: any) {
     super(props)
@@ -36,7 +36,7 @@ export class CollectionView extends React.Component<
   private handleSidebarResize = (width: number) => {
     this.props.dispatcher.setSidebarWidth(width)
   }
-  
+
   private handleSidebarReset = () => {
     this.props.dispatcher.resetSidebarWidth()
   }

@@ -23,7 +23,7 @@ export class Fields extends React.Component<IFieldsProps, {}> {
   public renderFieldItems() {
     return this.props.fields.map((field: string, index: number) => {
       return (
-        <FieldItem 
+        <FieldItem
           key={index}
           index={index}
           value={field}

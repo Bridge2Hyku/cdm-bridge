@@ -16,6 +16,10 @@ interface IFieldsProps {
 
 export class Fields extends React.Component<IFieldsProps, {}> {
 
+  private hideRemoveField(): boolean {
+    return this.props.fields.length <= 1
+  }
+
   public renderFieldItems() {
     return this.props.fields.map((field: string, index: number) => {
       return (
@@ -26,6 +30,7 @@ export class Fields extends React.Component<IFieldsProps, {}> {
           onFieldValueChanged={this.props.onFieldValueChanged}
           onFieldInsert={this.props.onFieldInsert}
           onFieldRemove={this.props.onFieldRemove}
+          hideRemoveField={this.hideRemoveField()}
         />
       )
     })
@@ -46,6 +51,8 @@ export class Fields extends React.Component<IFieldsProps, {}> {
 interface IFieldItemProps {
   readonly value: string
   readonly index: number
+  readonly hideRemoveField?: boolean
+  readonly hideInsertField?: boolean
 
   readonly onFieldValueChanged: (index: number, value: string) => void
   readonly onFieldInsert: (index: number) => void
@@ -65,6 +72,38 @@ class FieldItem extends React.Component<IFieldItemProps, {}> {
     this.props.onFieldRemove(this.props.index)
   }
 
+  private renderRemoveButton() {
+    if (this.props.hideRemoveField) {
+      return null
+    }
+    return (
+      <Button
+        onClick={this.onFieldRemove}
+      >
+        <FontAwesomeIcon
+          icon={Icons.faMinus}
+          size="sm"
+        />
+      </Button>
+    )
+  }
+
+  private renderInsertButton() {
+    if (this.props.hideInsertField) {
+      return null
+    }
+    return (
+      <Button
+        onClick={this.onFieldInsert}
+      >
+        <FontAwesomeIcon
+          icon={Icons.faPlus}
+          size="sm"
+        />
+      </Button>
+    )
+  }
+
   public render() {
     return (
       <Row>
@@ -72,22 +111,8 @@ class FieldItem extends React.Component<IFieldItemProps, {}> {
           value={this.props.value}
           onValueChanged={this.onFieldValueChanged}
         />
-        <Button
-          onClick={this.onFieldRemove}
-        >
-          <FontAwesomeIcon
-            icon={Icons.faMinus}
-            size="sm"
-          />
-        </Button>
-        <Button
-          onClick={this.onFieldInsert}
-        >
-          <FontAwesomeIcon
-            icon={Icons.faPlus}
-            size="sm"
-          />
-        </Button>
+        {this.renderRemoveButton()}
+        {this.renderInsertButton()}
       </Row>
     )
   }

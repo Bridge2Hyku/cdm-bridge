@@ -1,0 +1,19 @@
+{
+  "typescript.tsdk": "./node_modules/typescript/lib",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/release": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/release": true
+  },
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true
+}

@@ -31,10 +31,14 @@ export class Preferences extends React.Component<
   public constructor(props: IPreferencesProps) {
     super(props)
 
+    const cdmPort = this.props.preferences.cdm.port ?
+      this.props.preferences.cdm.port.toString() :
+      ''
+
     this.state = {
       selectedIndex: PreferencesTab.ContentDM,
       contentDmHostname: this.props.preferences.cdm.hostname,
-      contentDmPort: this.props.preferences.cdm.port.toString(),
+      contentDmPort: cdmPort,
       contentDmSsl: this.props.preferences.cdm.ssl,
       exportFields: Array.from(this.props.preferences.fields),
       defaultFields: Array.from(this.props.defaultFields)

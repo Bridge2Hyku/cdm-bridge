@@ -20,8 +20,7 @@
     "productName": "CDM Bridge",
     "appId": "edu.uh.lib.CdmBridge",
     "dmg": {
-      "contents": [
-        {
+      "contents": [{
           "x": 130,
           "y": 220
         },
@@ -80,13 +79,13 @@
     "@types/uuid": "^3.4.3",
     "electron": "2.0.0",
     "electron-builder": "^20.16.0",
-    "electron-webpack": "^2.0.1",
+    "electron-webpack": "^2.1.2",
     "electron-webpack-ts": "^2.0.2",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3",
     "tslint": "^5.10.0",
     "typescript": "^2.9.2",
-    "webpack": "^4.8.1"
+    "webpack": "^4.8.3"
   },
   "resolutions": {
     "webpack-sources": "1.1.0"

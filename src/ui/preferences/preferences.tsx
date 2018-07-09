@@ -137,7 +137,7 @@ export class Preferences extends React.Component<
               className="reset"
               onClick={this.onReset}
             >
-              Reset Fields
+              Reset
             </Button>
             <Button onClick={this.props.onDismissed}>Cancel</Button>
             <Button type="submit">Save</Button>

@@ -24,14 +24,32 @@
 .mapping-container {
   overflow-y: auto;
   padding: var(--spacing-double);
-
+  .header {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    border-bottom: 1px solid var(--box-border-color);
+    padding-bottom: var(--spacing);
+    &.row-component:not(:last-child) {
+      margin-bottom: var(--spacing-double);
+    }
+    .target {
+      padding-right: var(--spacing);
+      width: 100%;
+      max-width: 25%;
+      display: inline-block;
+      margin: 0;
+    }
+    .source {
+      width: 100%;
+      max-width: 75%;
+      flex: 0 0 75%;
+    }
+  }
   .row-component:not(:last-child) {
     margin-bottom: var(--spacing);
   }
-
   .select-component {
     width: 100%;
-
     label {
       padding-right: var(--spacing);
       width: 100%;
@@ -42,7 +60,6 @@
       width: 100%;
       max-width: 75%;
       flex: 0 0 75%;
-
       select {
         width: 75%;
       }

@@ -41,7 +41,7 @@ export class Map extends React.Component<IMapProps, {}> {
     return crosswalk[alias]
   }
 
-  public render() {
+  private renderMapItem() {
     const fields = this.props.fields
     const crosswalk = this.getCrosswalk()
     if (!fields) {
@@ -65,13 +65,30 @@ export class Map extends React.Component<IMapProps, {}> {
     })
 
     return (
-      <div className={this.props.className}>
-        <div className="mapping-fields">
-          {mapitems}
-        </div>
+      <div className="mapping-fields">
+        {mapitems}
       </div>
     )
   }
+
+  private renderMapHeader() {
+    return (
+      <Row className="header">
+        <div className="target">Export Field</div>
+        <div className="source">CDM Field</div>
+      </Row>
+    )
+  }
+
+  public render() {
+    return (
+      <div className={this.props.className}>
+        {this.renderMapHeader()}
+        {this.renderMapItem()}
+      </div>
+    )
+  }
+
 }
 
 interface IMapItemProps {

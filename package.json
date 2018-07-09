@@ -66,6 +66,8 @@
     "uuid": "^3.3.2"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.52",
+    "@babel/preset-env": "^7.0.0-beta.52",
     "@babel/preset-react": "^7.0.0-beta.51",
     "@types/classnames": "^2.2.4",
     "@types/csv-stringify": "^1.4.2",
@@ -82,10 +84,11 @@
     "electron-webpack-ts": "^2.0.2",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3",
+    "tslint": "^5.10.0",
     "typescript": "^2.9.2",
     "webpack": "^4.8.1"
   },
   "resolutions": {
-    "webpack-sources": "1.0.1"
+    "webpack-sources": "1.1.0"
   }
 }

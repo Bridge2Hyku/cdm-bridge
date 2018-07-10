@@ -24,9 +24,9 @@ const defaultSidebarWidth: number = 200
 
 const defaultFields: ReadonlyArray<IField> = [
   { id: 'title', name: 'Title', required: true },
-  { id: 'creator', name: 'Creator', required: false },
+  { id: 'creator', name: 'Creator', required: true },
   { id: 'keyword', name: 'Keyword', required: true },
-  { id: 'rights_statement', name: 'Rights statement', required: false },
+  { id: 'rights_statement', name: 'Rights statement', required: true },
   { id: 'contributor', name: 'Contributor', required: false },
   { id: 'abstract_summary', name: 'Abstract / Summary', required: false },
   { id: 'license', name: 'License', required: false },

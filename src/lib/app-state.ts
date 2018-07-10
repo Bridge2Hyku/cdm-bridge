@@ -13,11 +13,6 @@ export enum FoldoutType {
   Export
 }
 
-export type Field = {
-  readonly name: string,
-  readonly required: boolean
-}
-
 export type Popup = { type: PopupType.Preferences }
 export type Foldout = { type: FoldoutType.Export }
 
@@ -33,7 +28,7 @@ export interface IAppState {
   readonly exportProgress: IExportProgress
   readonly errors: ReadonlyArray<Error>
   readonly sidebarWidth: number
-  readonly defaultFields: Array<string>
+  readonly defaultFields: ReadonlyArray<IField>
 }
 
 export interface IExportProgress {
@@ -43,5 +38,11 @@ export interface IExportProgress {
 
 export interface IPreferences {
   cdm: CdmServer
-  fields: Array<string>
+  fields: ReadonlyArray<IField>
 }
+
+export interface IField {
+  id: string
+  name: string
+  required: boolean
+} 

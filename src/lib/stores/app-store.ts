@@ -6,6 +6,7 @@ import {
   ViewType,
   IExportProgress,
   IPreferences,
+  IField
 } from '../app-state'
 import { TypedBaseStore } from './base-store'
 import {
@@ -21,24 +22,24 @@ import { remote } from 'electron'
 
 const defaultSidebarWidth: number = 200
 
-const defaultFields: Array<string> = [
-  'Title',
-  'Creator',
-  'Keyword',
-  'Rights statement',
-  'Contributor',
-  'Abstract / Summary',
-  'License',
-  'Publisher',
-  'Date created',
-  'Subject',
-  'Language',
-  'Identifier',
-  'Location',
-  'Related URL',
-  'Source',
-  'Resource type',
-  'Extent'
+const defaultFields: ReadonlyArray<IField> = [
+  { id: 'title', name: 'Title', required: true },
+  { id: 'creator', name: 'Creator', required: false },
+  { id: 'keyword', name: 'Keyword', required: true },
+  { id: 'rights_statement', name: 'Rights statement', required: false },
+  { id: 'contributor', name: 'Contributor', required: false },
+  { id: 'abstract_summary', name: 'Abstract / Summary', required: false },
+  { id: 'license', name: 'License', required: false },
+  { id: 'publisher', name: 'Publisher', required: false },
+  { id: 'date_created', name: 'Date created', required: false },
+  { id: 'subject', name: 'Subject', required: false },
+  { id: 'language', name: 'Language', required: false },
+  { id: 'identifier', name: 'Identifier', required: false },
+  { id: 'location', name: 'Location', required: false },
+  { id: 'related_url', name: 'Related URL', required: false },
+  { id: 'source', name: 'Source', required: false },
+  { id: 'resource_type', name: 'Resource type', required: false },
+  { id: 'extent', name: 'Extent', required: false }
 ]
 
 const defaultPreferences: IPreferences = {
@@ -66,7 +67,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private exportProgress: IExportProgress = { value: undefined }
   private errors: ReadonlyArray<Error> = new Array<Error>()
   private sidebarWidth: number = defaultSidebarWidth
-  private defaultFields: Array<string> = defaultFields
+  private defaultFields: ReadonlyArray<IField> = defaultFields
 
   protected emitUpdate() {
     if (this.emitQueued) {
@@ -177,7 +178,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   public _setCrosswalk(
     alias: string,
-    field: string,
+    field: IField,
     value: string
   ): Promise<void> {
     if (!this.crosswalk) {
@@ -186,12 +187,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     if (!this.crosswalk[alias]) {
       let cw: any = {}
-      this.preferences.fields.map((f: string) => {
-        return cw[f] = ''
+      this.preferences.fields.map((f: IField) => {
+        return cw[f.id] = ''
       })
       this.crosswalk[alias] = cw
     }
-    this.crosswalk[alias][field] = value
+    this.crosswalk[alias][field.id] = value
 
     localStorage.setItem('crosswalk', JSON.stringify(this.crosswalk))
     this.emitUpdate()
@@ -218,8 +219,8 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
-  public _setPreferencesFields(fields: Array<string>): Promise<any> {
-    this.preferences.fields = fields.slice()
+  public _setPreferencesFields(fields: ReadonlyArray<IField>): Promise<any> {
+    this.preferences.fields = Array.from(fields)
     localStorage.setItem('preferences', JSON.stringify(this.preferences))
 
     return Promise.resolve()

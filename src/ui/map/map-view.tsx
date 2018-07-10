@@ -4,10 +4,11 @@ import { BlankMap } from './blank-map'
 import { Map } from './map'
 import { Dispatcher } from '../../lib/dispatcher'
 import { CdmFieldInfo } from '../../lib/contentdm'
+import { IField } from '../../lib/app-state'
 
 interface IMapProps {
   readonly dispatcher: Dispatcher
-  readonly fields: ReadonlyArray<string> | null
+  readonly fields: ReadonlyArray<IField> | null
   readonly collectionFieldInfo: ReadonlyArray<CdmFieldInfo> | null
   readonly alias: string
   readonly crosswalk: any

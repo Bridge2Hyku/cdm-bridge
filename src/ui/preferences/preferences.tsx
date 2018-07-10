@@ -7,11 +7,13 @@ import { TabBar } from '../tab-bar'
 import { ContentDm } from './contentdm'
 import { Button, ButtonGroup } from '../button'
 import { Fields } from './fields'
+import { IField } from '../../lib/app-state'
+import { sanitizeId } from '../../lib/id-pool'
 
 interface IPreferencesProps {
   readonly dispatcher: Dispatcher
   readonly preferences: any
-  readonly defaultFields: Array<string>
+  readonly defaultFields: ReadonlyArray<IField>
   readonly onDismissed: () => void
 }
 
@@ -20,8 +22,8 @@ interface IPreferencesState {
   readonly contentDmHostname: string
   readonly contentDmPort: string
   readonly contentDmSsl: boolean
-  readonly exportFields: Array<string>
-  readonly defaultFields: Array<string>
+  readonly exportFields: ReadonlyArray<IField>
+  readonly defaultFields: ReadonlyArray<IField>
 }
 
 export class Preferences extends React.Component<
@@ -71,24 +73,33 @@ export class Preferences extends React.Component<
   }
 
   private onFieldValueChanged = (index: number, value: string) => {
-    const state = this.state
-    state.exportFields[index] = value
-    this.setState({ exportFields: state.exportFields })
+    let newExportFields = Array.from(this.state.exportFields)
+    const newField: IField = { ...newExportFields[index] }
+
+    newField.id = sanitizeId(value)
+    newField.name = value
+    newExportFields[index] = newField
+
+    this.setState({ exportFields: newExportFields })
   }
 
   private onFieldInsert = (index: number) => {
-    const state = this.state
-    state.exportFields.splice(index + 1, 0, '')
+    let newExportFields = Array.from(this.state.exportFields)
+    newExportFields.splice(index + 1, 0, {
+      id: '',
+      name: '',
+      required: false
+    })
     this.setState({
-      exportFields: state.exportFields
+      exportFields: newExportFields
     })
   }
 
   private onFieldRemove = (index: number) => {
-    const state = this.state
-    state.exportFields.splice(index, 1)
+    let newExportFields = Array.from(this.state.exportFields)
+    newExportFields.splice(index, 1)
     this.setState({
-      exportFields: state.exportFields
+      exportFields: newExportFields
     })
   }
 

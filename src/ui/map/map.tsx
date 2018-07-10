@@ -4,11 +4,12 @@ import { CdmFieldInfo } from '../../lib/contentdm'
 import { Select } from '../form'
 import { Row } from '../layout'
 import { Dispatcher } from '../../lib/dispatcher'
+import { IField } from '../../lib/app-state'
 
 interface IMapProps {
   readonly dispatcher: Dispatcher
   readonly className?: string
-  readonly fields: ReadonlyArray<string> | null
+  readonly fields: ReadonlyArray<IField> | null
   readonly collectionFieldInfo: ReadonlyArray<CdmFieldInfo> | null
   readonly alias: string
   readonly crosswalk: any
@@ -17,7 +18,7 @@ interface IMapProps {
 export class Map extends React.Component<IMapProps, {}> {
 
   private onSelectedFieldChanged = (
-    field: string,
+    field: IField,
     nick: string
   ) => {
     this.props.dispatcher.setCrosswalk(this.props.alias, field, nick)
@@ -33,7 +34,7 @@ export class Map extends React.Component<IMapProps, {}> {
     if (!crosswalk[alias]) {
       let cw: any = {}
       this.props.fields.map(f => {
-        return cw[f] = ''
+        return cw[f.id] = ''
       })
       return cw
     }
@@ -49,13 +50,13 @@ export class Map extends React.Component<IMapProps, {}> {
     }
 
     const mapitems = fields.map((field, index) => {
-      const value = crosswalk[field] || ''
+      const value = crosswalk[field.id] || ''
 
       return (
         <Row key={index}>
           <MapItem
             key={index}
-            fieldName={field}
+            field={field}
             collectionFieldInfo={this.props.collectionFieldInfo}
             onSelectedFieldChanged={this.onSelectedFieldChanged}
             value={value}
@@ -92,15 +93,15 @@ export class Map extends React.Component<IMapProps, {}> {
 }
 
 interface IMapItemProps {
-  readonly fieldName: string
+  readonly field: IField
   readonly collectionFieldInfo: ReadonlyArray<CdmFieldInfo> | null
   readonly value?: string
-  readonly onSelectedFieldChanged: (field: string, value: string) => void
+  readonly onSelectedFieldChanged: (field: IField, value: string) => void
 }
 
 interface IMapItemState {
   readonly value?: string
-  readonly field: string
+  readonly field: IField
 }
 
 class MapItem extends React.Component<IMapItemProps, IMapItemState> {
@@ -109,7 +110,7 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
     super(props)
 
     this.state = {
-      field: this.props.fieldName,
+      field: this.props.field,
       value: this.props.value || ""
     }
   }
@@ -134,7 +135,7 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
 
     return (
       <Select
-        label={this.props.fieldName}
+        label={this.props.field.name}
         value={this.state.value}
         onChange={this.onSelectedChanged}
       >

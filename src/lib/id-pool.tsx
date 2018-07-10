@@ -3,8 +3,8 @@ import { v4 } from 'uuid'
 const activeIds = new Set<string>()
 const poolPrefix = '__'
 
-function sanitizeId(id: string): string {
-  return id.replace(/[^a-z0-9\-_:.]+/gi, '_')
+export function sanitizeId(id: string): string {
+  return id.replace(/[^a-z0-9\-_:.]+/gi, '_').toLowerCase()
 }
 
 export function createUniqueId(prefix: string): string {

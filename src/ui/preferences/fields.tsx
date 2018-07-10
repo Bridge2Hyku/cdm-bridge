@@ -3,11 +3,12 @@ import { DialogContent } from '../dialog'
 import { TextBox } from '../form'
 import { Row } from '../layout'
 import { Button } from '../button'
+import { IField } from '../../lib/app-state'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 
 interface IFieldsProps {
-  readonly fields: Array<string>
+  readonly fields: ReadonlyArray<IField>
 
   readonly onFieldValueChanged: (index: number, value: string) => void
   readonly onFieldInsert: (index: number) => void
@@ -21,12 +22,12 @@ export class Fields extends React.Component<IFieldsProps, {}> {
   }
 
   public renderFieldItems() {
-    return this.props.fields.map((field: string, index: number) => {
+    return this.props.fields.map((field: IField, index: number) => {
       return (
         <FieldItem
           key={index}
           index={index}
-          value={field}
+          value={field.name}
           onFieldValueChanged={this.props.onFieldValueChanged}
           onFieldInsert={this.props.onFieldInsert}
           onFieldRemove={this.props.onFieldRemove}

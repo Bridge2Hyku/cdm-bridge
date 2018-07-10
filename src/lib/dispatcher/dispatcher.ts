@@ -1,5 +1,5 @@
 import { AppStore } from '../stores'
-import { Popup, Foldout } from '../app-state'
+import { Popup, Foldout, IField } from '../app-state'
 
 export class Dispatcher {
   private readonly appStore: AppStore
@@ -32,7 +32,7 @@ export class Dispatcher {
     return this.appStore._setPreferencesContentDm(hostname, port, ssl)
   }
 
-  public setPreferencesFields(fields: Array<string>): Promise<void> {
+  public setPreferencesFields(fields: ReadonlyArray<IField>): Promise<void> {
     return this.appStore._setPreferencesFields(fields)
   }
 
@@ -44,7 +44,7 @@ export class Dispatcher {
     return this.appStore._setAlias(alias)
   }
 
-  public setCrosswalk(alias: string, field: string, value: string): Promise<void> {
+  public setCrosswalk(alias: string, field: IField, value: string): Promise<void> {
     return this.appStore._setCrosswalk(alias, field, value)
   }
 

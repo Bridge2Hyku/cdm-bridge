@@ -14,7 +14,8 @@ import {
   PopupType,
   FoldoutType,
   ViewType,
-  Popup
+  Popup,
+  IField
 } from '../lib/app-state'
 import { Preferences } from './preferences'
 import { ExportView, DropdownState, ExportDropdown } from './export'
@@ -66,7 +67,7 @@ export class App extends React.Component<IAppProps, IAppState> {
     return state.collections
   }
 
-  private getFields(): Array<string> | null {
+  private getFields(): ReadonlyArray<IField> | null {
     const preferences = this.getPreferences()
     return preferences.fields
   }

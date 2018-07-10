@@ -1,5 +1,5 @@
 import { ContentDm, CdmServer } from './contentdm'
-import { IExportProgress } from './app-state'
+import { IExportProgress, IField } from './app-state'
 import { csvString } from './csv'
 import { writeFile } from 'fs';
 import { dirname } from 'path';
@@ -18,7 +18,7 @@ export class Exporter {
     alias: string,
     location: string,
     download: boolean,
-    fields: Array<string>,
+    fields: ReadonlyArray<IField>,
     crosswalk: any,
     progressCallback: (progress: IExportProgress) => void
   ): Promise<void> {
@@ -110,10 +110,10 @@ export class Exporter {
     }
   }
 
-  private _map(item: any, fields: Array<string>): any {
+  private _map(item: any, fields: ReadonlyArray<IField>): any {
     let mapItem: any = []
     for (let key of fields) {
-      const nick = this.exportCrosswalk[key]
+      const nick = this.exportCrosswalk[key.id]
       mapItem.push((typeof item[nick] === 'string') ? item[nick] : '')
     }
     return ['GenericWork', ''].concat(mapItem)
@@ -121,14 +121,14 @@ export class Exporter {
 
   private _processRecords(
     records: any,
-    fields: Array<string>,
+    fields: ReadonlyArray<IField>,
     progressCallback: (progress: IExportProgress) => void
   ): Promise<any> {
     let count = 0
     let items: Array<any> = [['Object Type', 'Filename']
       .concat(
         fields.map((key) => {
-          return key;
+          return key.name;
         })
       )]
 

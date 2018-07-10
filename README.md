@@ -1,6 +1,7 @@
 # CDM Bridge
 
 [![Build Status](https://travis-ci.org/Bridge2Hyku/cdm-bridge.svg?branch=master)](https://travis-ci.org/Bridge2Hyku/cdm-bridge)
+[![Maintainability](https://api.codeclimate.com/v1/badges/050b2b0a38023f3761ae/maintainability)](https://codeclimate.com/github/Bridge2Hyku/cdm-bridge/maintainability)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://raw.githubusercontent.com/Bridge2Hyku/cdm-bridge/master/LICENSE)
 ![Top Language](https://img.shields.io/github/languages/top/Bridge2Hyku/cdm-bridge.svg?style=flate&colorB=green)
 

@@ -82,6 +82,7 @@
     "@types/uuid": "^3.4.3",
     "electron": "2.0.0",
     "electron-builder": "^20.16.0",
+    "electron-devtools-installer": "^2.2.4",
     "electron-webpack": "^2.1.2",
     "electron-webpack-ts": "^2.0.2",
     "node-sass": "^4.9.0",

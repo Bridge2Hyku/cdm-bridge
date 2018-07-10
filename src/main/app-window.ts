@@ -60,10 +60,12 @@ export class AppWindow {
   public load() {
     if (__DEV__) {
       this.window.webContents.openDevTools()
-    }
-
-    if (__DEV__) {
       this.window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
+
+      const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
+      installExtension(REACT_DEVELOPER_TOOLS)
+        .then((name: string) => console.log(`Added Extension:  ${name}`))
+        .catch((err: Error) => console.log('An error occurred: ', err))
     }
     else {
       this.window.loadURL(formatUrl({

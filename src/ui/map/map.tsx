@@ -133,9 +133,13 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
       return
     }
 
+    const labelClass = this.props.field.required ?
+      'required' : ''
+
     return (
       <Select
         label={this.props.field.name}
+        labelClassName={labelClass}
         value={this.state.value}
         onChange={this.onSelectedChanged}
       >

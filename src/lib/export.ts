@@ -2,7 +2,8 @@ import { ContentDm, CdmServer } from './contentdm'
 import { IExportProgress, IField } from './app-state'
 import { csvString } from './csv'
 import { writeFile } from 'fs';
-import { dirname } from 'path';
+import { basename, dirname } from 'path';
+import { sync } from 'mkdirp'
 
 export class Exporter {
   private exportAlias: string = ''
@@ -27,6 +28,19 @@ export class Exporter {
     progressCallback({ value: undefined, description: 'Getting item records' })
 
     this.files = []
+
+    if (download) {
+      let csvFile = basename(location)
+      let newLocation = dirname(location) + '/' + basename(location, '.csv')
+      location = newLocation + '/' + csvFile
+
+      try {
+        sync(newLocation)
+      }
+      catch (err) {
+        return Promise.reject(err)
+      }
+    }
 
     return this.records(alias)
       .then((data: any) => {
@@ -158,7 +172,7 @@ export class Exporter {
 
   private _downloadFiles(
     files: any,
-    location: any,
+    location: string,
     progressCallback: (progress: IExportProgress) => void
   ): Promise<any> {
     let count = 0

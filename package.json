@@ -20,7 +20,8 @@
     "productName": "CDM Bridge",
     "appId": "edu.uh.lib.CdmBridge",
     "dmg": {
-      "contents": [{
+      "contents": [
+        {
           "x": 130,
           "y": 220
         },
@@ -58,6 +59,7 @@
     "electron-window-state": "^4.1.1",
     "event-kit": "^2.5.0",
     "file-url": "^2.0.2",
+    "mkdirp": "^0.5.1",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-transition-group": "^1.2.0",
@@ -72,6 +74,7 @@
     "@types/csv-stringify": "^1.4.2",
     "@types/event-kit": "^2.4.0",
     "@types/file-url": "^2.0.0",
+    "@types/mkdirp": "^0.5.2",
     "@types/node": "^10.5.1",
     "@types/react": "^16.4.1",
     "@types/react-dom": "^16.0.6",

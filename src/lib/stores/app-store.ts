@@ -293,9 +293,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
         this.selectedView = ViewType.Collection
         this.emitUpdate()
       })
-      .catch(() => {
+      .catch((err) => {
         this.selectedView = ViewType.Collection
-        this.emitUpdate()
+        this._pushError(err)
       })
 
 

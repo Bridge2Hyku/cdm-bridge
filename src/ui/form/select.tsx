@@ -3,6 +3,7 @@ import { createUniqueId, releaseUniqueId } from '../../lib/id-pool'
 
 interface ISelectProps {
   readonly label?: string
+  readonly labelClassName?: string
   readonly value?: string
   readonly defaultValue?: string
   readonly onChange?: (event: React.FormEvent<HTMLSelectElement>) => void
@@ -30,7 +31,18 @@ export class Select extends React.Component<ISelectProps, ISelectState> {
     const label = this.props.label
     const inputId = this.state.inputId
 
-    return label ? <label htmlFor={inputId}>{label}</label> : null
+    if (!label) {
+      return null
+    }
+
+    return (
+      <label
+        className={this.props.labelClassName}
+        htmlFor={inputId}
+      >
+        {label}
+      </label>
+    )
   }
 
   public render() {

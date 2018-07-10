@@ -33,7 +33,7 @@ export class AppWindow {
       show: false,
       backgroundColor: '#fff',
       webPreferences: {
-        webSecurity: false
+        webSecurity: !__DEV__
       }
     }
 
@@ -62,7 +62,11 @@ export class AppWindow {
       this.window.webContents.openDevTools()
       this.window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
 
-      const { default: installExtension, REACT_DEVELOPER_TOOLS } = require('electron-devtools-installer')
+      const {
+        default: installExtension,
+        REACT_DEVELOPER_TOOLS
+      } = require('electron-devtools-installer')
+
       installExtension(REACT_DEVELOPER_TOOLS)
         .then((name: string) => console.log(`Added Extension:  ${name}`))
         .catch((err: Error) => console.log('An error occurred: ', err))

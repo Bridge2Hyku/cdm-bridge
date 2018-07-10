@@ -22,7 +22,7 @@ export class Fields extends React.Component<IFieldsProps, {}> {
     return this.props.fields.length <= 1
   }
 
-  public renderFieldItems() {
+  private renderFieldItems() {
     return this.props.fields.map((field: IField, index: number) => {
       return (
         <FieldItem
@@ -39,12 +39,22 @@ export class Fields extends React.Component<IFieldsProps, {}> {
     })
   }
 
+  private renderHeader() {
+    return (
+      <Row className="header">
+        <div className="req">Req.</div>
+        <div className="name">Name</div>
+      </Row>
+    )
+  }
+
   public render() {
 
     return (
       <DialogContent
         className="fields-container"
       >
+        {this.renderHeader()}
         {this.renderFieldItems()}
       </DialogContent>
     )

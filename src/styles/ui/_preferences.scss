@@ -1,5 +1,27 @@
 .fields-container {
-  max-height: 200px;
+  max-height: 280px;
   overflow: hidden;
   overflow-y: auto;
+
+  .header .req,
+  .checkbox-component {
+    width: 26px;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+
+  .header {
+    font-weight: var(--font-weight-light);
+    border-bottom: 1px solid var(--box-border-color);
+
+    .name {
+      width: 100%;
+    }
+
+    &.row-component:not(:last-child) {
+      margin-bottom: var(--spacing-double);
+    }
+  }
+
 }

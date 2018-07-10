@@ -15,17 +15,56 @@ interface IMapProps {
   readonly crosswalk: any
 }
 
-export class Map extends React.Component<IMapProps, {}> {
+interface IMapState {
+  readonly disabledNicks: ReadonlyArray<string>
+}
+
+export class Map extends React.Component<IMapProps, IMapState> {
+
+  public constructor(props: IMapProps) {
+    super(props)
+
+    this.state = {
+      disabledNicks: []
+    }
+  }
+
+  public componentWillMount() {
+    this.loadDisabledNicks(this.props.alias)
+  }
+
+  public componentWillReceiveProps(nextProps: IMapProps) {
+    this.loadDisabledNicks(nextProps.alias)
+  }
+
+  private loadDisabledNicks(alias: string) {
+    const crosswalk = this.getCrosswalk(alias)
+    const usedNicks = Object.keys(crosswalk)
+      .map(id => crosswalk[id])
+      .filter(nick => nick !== '')
+
+    this.setState({ disabledNicks: usedNicks })
+  }
 
   private onSelectedFieldChanged = (
     field: IField,
-    nick: string
+    nick: string,
+    prev: string
   ) => {
+    this.disableNick(nick, prev)
     this.props.dispatcher.setCrosswalk(this.props.alias, field, nick)
   }
 
-  private getCrosswalk() {
-    const alias = this.props.alias
+  private disableNick(nick: string, prev: string) {
+    const fields = Array.from(this.state.disabledNicks)
+    const index = fields.indexOf(prev)
+    fields.splice(index, 1)
+    fields.push(nick)
+
+    this.setState({ disabledNicks: fields })
+  }
+
+  private getCrosswalk(alias: string) {
     const crosswalk = this.props.crosswalk || {}
     if (!this.props.fields) {
       return null
@@ -44,7 +83,7 @@ export class Map extends React.Component<IMapProps, {}> {
 
   private renderMapItem() {
     const fields = this.props.fields
-    const crosswalk = this.getCrosswalk()
+    const crosswalk = this.getCrosswalk(this.props.alias)
     if (!fields) {
       return
     }
@@ -57,6 +96,7 @@ export class Map extends React.Component<IMapProps, {}> {
           <MapItem
             key={index}
             field={field}
+            disabledNicks={this.state.disabledNicks}
             collectionFieldInfo={this.props.collectionFieldInfo}
             onSelectedFieldChanged={this.onSelectedFieldChanged}
             value={value}
@@ -96,7 +136,12 @@ interface IMapItemProps {
   readonly field: IField
   readonly collectionFieldInfo: ReadonlyArray<CdmFieldInfo> | null
   readonly value?: string
-  readonly onSelectedFieldChanged: (field: IField, value: string) => void
+  readonly disabledNicks?: ReadonlyArray<string>
+  readonly onSelectedFieldChanged: (
+    field: IField,
+    value: string,
+    prev: string
+  ) => void
 }
 
 interface IMapItemState {
@@ -122,9 +167,10 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
   private onSelectedChanged = (
     event: React.FormEvent<HTMLSelectElement>
   ) => {
+    const prev = this.state.value || ''
     const value = event.currentTarget.value
     this.setState({ value: value })
-    this.props.onSelectedFieldChanged(this.state.field, value)
+    this.props.onSelectedFieldChanged(this.state.field, value, prev)
   }
 
   public render() {
@@ -135,6 +181,7 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
 
     const labelClass = this.props.field.required ?
       'required' : ''
+    const disNicks = this.props.disabledNicks || []
 
     return (
       <Select
@@ -147,7 +194,11 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
           -- Select a field --
           </option>
         {options.map(f => (
-          <option key={f.nick} value={f.nick}>
+          <option
+            key={f.nick}
+            value={f.nick}
+            disabled={disNicks.indexOf(f.nick) !== -1}
+          >
             {f.name}
           </option>
         ))}

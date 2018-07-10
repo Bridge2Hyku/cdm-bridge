@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { DialogContent } from '../dialog'
-import { TextBox } from '../form'
+import { TextBox, Checkbox, CheckboxValue } from '../form'
 import { Row } from '../layout'
 import { Button } from '../button'
 import { IField } from '../../lib/app-state'
@@ -11,6 +11,7 @@ interface IFieldsProps {
   readonly fields: ReadonlyArray<IField>
 
   readonly onFieldValueChanged: (index: number, value: string) => void
+  readonly onFieldRequiredChanged: (index: number, value: boolean) => void
   readonly onFieldInsert: (index: number) => void
   readonly onFieldRemove: (index: number) => void
 }
@@ -27,8 +28,9 @@ export class Fields extends React.Component<IFieldsProps, {}> {
         <FieldItem
           key={index}
           index={index}
-          value={field.name}
+          value={field}
           onFieldValueChanged={this.props.onFieldValueChanged}
+          onFieldRequiredChanged={this.props.onFieldRequiredChanged}
           onFieldInsert={this.props.onFieldInsert}
           onFieldRemove={this.props.onFieldRemove}
           hideRemoveField={this.hideRemoveField()}
@@ -50,12 +52,13 @@ export class Fields extends React.Component<IFieldsProps, {}> {
 }
 
 interface IFieldItemProps {
-  readonly value: string
+  readonly value: IField
   readonly index: number
   readonly hideRemoveField?: boolean
   readonly hideInsertField?: boolean
 
   readonly onFieldValueChanged: (index: number, value: string) => void
+  readonly onFieldRequiredChanged: (index: number, value: boolean) => void
   readonly onFieldInsert: (index: number) => void
   readonly onFieldRemove: (index: number) => void
 }
@@ -71,6 +74,11 @@ class FieldItem extends React.Component<IFieldItemProps, {}> {
 
   private onFieldRemove = () => {
     this.props.onFieldRemove(this.props.index)
+  }
+
+  private onFieldRequiredChanged = (event: React.FormEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.checked
+    this.props.onFieldRequiredChanged(this.props.index, value)
   }
 
   private renderRemoveButton() {
@@ -108,8 +116,13 @@ class FieldItem extends React.Component<IFieldItemProps, {}> {
   public render() {
     return (
       <Row>
+        <Checkbox
+          key={this.props.value.id}
+          value={this.props.value.required ? CheckboxValue.On : CheckboxValue.Off}
+          onChange={this.onFieldRequiredChanged}
+        />
         <TextBox
-          value={this.props.value}
+          value={this.props.value.name}
           onValueChanged={this.onFieldValueChanged}
         />
         {this.renderRemoveButton()}

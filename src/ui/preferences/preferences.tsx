@@ -83,6 +83,16 @@ export class Preferences extends React.Component<
     this.setState({ exportFields: newExportFields })
   }
 
+  private onFieldRequiredChanged = (index: number, value: boolean) => {
+    let newExportFields = Array.from(this.state.exportFields)
+    const newField: IField = { ...newExportFields[index] }
+
+    newField.required = value
+    newExportFields[index] = newField
+
+    this.setState({ exportFields: newExportFields })
+  }
+
   private onFieldInsert = (index: number) => {
     let newExportFields = Array.from(this.state.exportFields)
     newExportFields.splice(index + 1, 0, {
@@ -177,6 +187,7 @@ export class Preferences extends React.Component<
           <Fields
             fields={this.state.exportFields}
             onFieldValueChanged={this.onFieldValueChanged}
+            onFieldRequiredChanged={this.onFieldRequiredChanged}
             onFieldInsert={this.onFieldInsert}
             onFieldRemove={this.onFieldRemove}
           />

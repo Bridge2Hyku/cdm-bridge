@@ -16,7 +16,14 @@
     border-bottom: 1px solid var(--box-border-color);
 
     .name {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
       width: 100%;
+    }
+
+    .action {
+      width: 74px;
     }
 
     &.row-component:not(:last-child) {

@@ -42,8 +42,9 @@ export class Fields extends React.Component<IFieldsProps, {}> {
   private renderHeader() {
     return (
       <Row className="header">
-        <div className="req">Req.</div>
         <div className="name">Name</div>
+        <div className="req">Req.</div>
+        <div className="action"></div>
       </Row>
     )
   }
@@ -126,14 +127,14 @@ class FieldItem extends React.Component<IFieldItemProps, {}> {
   public render() {
     return (
       <Row>
+        <TextBox
+          value={this.props.value.name}
+          onValueChanged={this.onFieldValueChanged}
+        />
         <Checkbox
           key={this.props.value.id}
           value={this.props.value.required ? CheckboxValue.On : CheckboxValue.Off}
           onChange={this.onFieldRequiredChanged}
-        />
-        <TextBox
-          value={this.props.value.name}
-          onValueChanged={this.onFieldValueChanged}
         />
         {this.renderRemoveButton()}
         {this.renderInsertButton()}

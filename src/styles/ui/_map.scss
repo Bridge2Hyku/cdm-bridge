@@ -51,10 +51,11 @@
   .select-component {
     width: 100%;
     label {
-      padding-right: var(--spacing);
+      margin-right: var(--spacing);
       width: 100%;
       max-width: 25%;
       display: inline-block;
+      white-space: nowrap;
     }
     div {
       width: 100%;
@@ -67,7 +68,16 @@
   }
   .mapping-fields {
     .required {
-      font-weight: var(--font-weight-bold)
+      font-weight: var(--font-weight-bold);
+
+      &:after {
+        content: "Required";
+        font-weight: normal;
+        font-style: italic;
+        color: var(--required-field-color);
+        font-size: var(--font-size-sm);
+        margin-left: var(--spacing);
+      }
     }
   }
 }

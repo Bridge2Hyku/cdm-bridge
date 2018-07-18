@@ -33,11 +33,12 @@
       margin-bottom: var(--spacing-double);
     }
     .target {
-      padding-right: var(--spacing);
-      width: 100%;
+      width: 25%;
       max-width: 25%;
+      min-width: 25%;
       display: inline-block;
       margin: 0;
+      margin-right: var(--spacing);
     }
     .source {
       width: 100%;
@@ -52,8 +53,9 @@
     width: 100%;
     label {
       margin-right: var(--spacing);
-      width: 100%;
+      width: 25%;
       max-width: 25%;
+      min-width: 25%;
       display: inline-block;
       white-space: nowrap;
     }
@@ -69,7 +71,6 @@
   .mapping-fields {
     .required {
       font-weight: var(--font-weight-bold);
-
       &:after {
         content: "Required";
         font-weight: normal;

@@ -103,10 +103,14 @@ export class ContentDm {
 
     const options = {
       url: this._endpoint() + query,
+      headers: {
+        Connection: 'keep-alive'
+      },
       forever: true,
       json: true,
       resolveWithFullResponse: true
     }
+
     return rp(options)
       .then((response) => {
         return response.body

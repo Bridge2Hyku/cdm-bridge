@@ -23,48 +23,30 @@ export class Exporter {
     crosswalk: any,
     progressCallback: (progress: IExportProgress) => void
   ): Promise<void> {
+
     this.exportAlias = alias
     this.exportCrosswalk = crosswalk
-    progressCallback({ value: undefined, description: 'Getting item records' })
-
     this.files = []
 
-    if (download) {
-      let csvFile = basename(location)
-      let newLocation = dirname(location) + '/' + basename(location, '.csv')
-      location = newLocation + '/' + csvFile
+    progressCallback({ value: undefined, description: 'Getting item records' })
 
-      try {
-        sync(newLocation)
-      }
-      catch (err) {
+    const data = await this.records(alias)
+    const items = await this._processRecords(data.records, fields, progressCallback)
+
+    progressCallback({ value: undefined, description: 'Creating CSV' })
+    const csv = await csvString(items)
+
+    location = download ? this.downloadLocation(location) : location
+    writeFile(location, csv, (err) => {
+      if (err) {
         return Promise.reject(err)
       }
-    }
+      return
+    })
 
-    return this.records(alias)
-      .then((data: any) => {
-        return this._processRecords(data.records, fields, progressCallback)
-      }).then((items) => {
-        progressCallback({ value: undefined, description: 'Creating CSV' })
-        return csvString(items)
-      }).then((csv: string) => {
-        writeFile(location, csv, (err) => {
-          if (err) {
-            return Promise.reject(err)
-          }
-          return
-        })
-      }).then(() => {
-        if (download && this.files) {
-          return this._downloadFiles(
-            this.files,
-            location,
-            progressCallback
-          )
-        }
-        return Promise.resolve()
-      })
+    if (download && this.files) {
+      await this._downloadFiles(this.files, location, progressCallback)
+    }
   }
 
   private async records(
@@ -180,5 +162,19 @@ export class Exporter {
       })
       await this.cdm.download(file, dirname(location))
     }
+  }
+
+  private downloadLocation(location: string): string {
+    let csvFile = basename(location)
+    let newLocation = dirname(location) + '/' + basename(location, '.csv')
+
+    try {
+      sync(newLocation)
+    }
+    catch (err) {
+      return location
+    }
+
+    return newLocation + '/' + csvFile
   }
 }

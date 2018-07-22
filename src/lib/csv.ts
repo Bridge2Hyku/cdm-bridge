@@ -1,6 +1,6 @@
 import * as stringify from 'csv-stringify';
 
-export function csvString(data: any): Promise<any> {
+export async function csvString(data: any): Promise<any> {
   return new Promise((resolve, reject) => {
     const csv: stringify.Stringifier = stringify({ delimiter: ',' })
     let csvData: string = ''

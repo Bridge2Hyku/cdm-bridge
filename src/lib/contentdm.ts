@@ -1,4 +1,5 @@
-import { get } from 'http'
+import * as request from 'request'
+import * as rp from 'request-promise'
 import { createWriteStream, existsSync, rename, } from 'fs'
 
 export type CdmServer = {
@@ -73,60 +74,43 @@ export class ContentDm {
         resolve()
       }
 
-      let output = createWriteStream(part)
-      get(url, (response) => {
-        response.pipe(output)
-        output.on('finish', () => {
-          output.close()
-          rename(part, destination, (e) => {
-            if (e) {
-              reject(e)
-            }
-            resolve()
-          })
+      const output = createWriteStream(part)
+      output.on('finish', () => {
+        output.close()
+        rename(part, destination, (e) => {
+          if (e) {
+            reject(e)
+          }
+          resolve()
         })
-      }).on('error', (e) => {
-        reject(e)
       })
+
+      request.get(url)
+        .on('error', (err) => reject(err))
+        .pipe(output)
     })
   }
 
-  public _request(fnc: string, params?: Array<string>): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (this._endpoint() === '') {
-        const error = new Error('ContentDM settings are not set.')
-        console.error(error.message)
-        reject(error)
-      }
+  public async _request(fnc: string, params?: Array<string>): Promise<any> {
+    if (this._endpoint() === '') {
+      const error = new Error('ContentDM settings are not set.')
+      console.error(error.message)
+      return Promise.reject(error)
+    }
 
-      let strParams = params ? params.join('/') : ''
-      let query = 'q=' + fnc + '/' + strParams + ('/json')
-      get(this._endpoint() + query, (res) => {
-        const { statusCode } = res
+    const strParams = params ? params.join('/') : ''
+    const query = 'q=' + fnc + '/' + strParams + ('/json')
 
-        if (statusCode !== 200) {
-          const error = new Error('Request Failed.\n' +
-            `Status Code: ${statusCode}`
-          )
-          console.error(error.message)
-          reject(error)
-        }
-
-        let rawData = ''
-        res.on('data', (chunk) => { rawData += chunk })
-        res.on('end', () => {
-          try {
-            const data = JSON.parse(rawData)
-            resolve(data)
-          }
-          catch (e) {
-            reject(e)
-          }
-        })
-      }).on('error', (e) => {
-        reject(e)
+    const options = {
+      url: this._endpoint() + query,
+      forever: true,
+      json: true,
+      resolveWithFullResponse: true
+    }
+    return rp(options)
+      .then((response) => {
+        return response.body
       })
-    })
   }
 
   private _fileUrl(alias: string, pointer: string): string {

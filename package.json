@@ -63,6 +63,8 @@
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-transition-group": "^1.2.0",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2",
     "source-map-support": "^0.5.5",
     "uuid": "^3.3.2"
   },
@@ -79,6 +81,8 @@
     "@types/react": "^16.4.1",
     "@types/react-dom": "^16.0.6",
     "@types/react-transition-group": "1.1.1",
+    "@types/request": "^2.47.1",
+    "@types/request-promise": "^4.1.42",
     "@types/uuid": "^3.4.3",
     "electron": "2.0.0",
     "electron-builder": "^20.22.0",

@@ -94,33 +94,34 @@ export class Exporter {
 
   private async getRecord(record: any): Promise<any> {
     if (record.filetype === 'cpd') {
-      return this.cdm.item(this.exportAlias, record.pointer)
-        .then((item) => {
-          return this.cdm.compoundObject(this.exportAlias, record.pointer)
-            .then((object) => {
-              item.files = []
-              const pages = object.page || object.node.page || []
-              pages.map((page: any) => {
-                item.files.push({
-                  filename: page.pagefile,
-                  alias: this.exportAlias,
-                  pointer: page.pageptr
-                })
-              })
-              return item
-            })
+      const item = await this.cdm.item(this.exportAlias, record.pointer)
+      const object = await this.cdm.compoundObject(
+        this.exportAlias,
+        record.pointer
+      )
+
+      item.files = []
+      const pages = object.page || object.node.page || []
+
+      pages.map((page: any) => {
+        item.files.push({
+          filename: page.pagefile,
+          alias: this.exportAlias,
+          pointer: page.pageptr
         })
+      })
+
+      return item
     }
     else {
-      return this.cdm.item(this.exportAlias, record.pointer)
-        .then((item) => {
-          item.files = [{
-            filename: record.find,
-            alias: this.exportAlias,
-            pointer: record.pointer
-          }]
-          return item
-        })
+      const item = await this.cdm.item(this.exportAlias, record.pointer)
+      item.files = [{
+        filename: record.find,
+        alias: this.exportAlias,
+        pointer: record.pointer
+      }]
+
+      return item
     }
   }
 
@@ -133,7 +134,7 @@ export class Exporter {
     return ['GenericWork', ''].concat(mapItem)
   }
 
-  private _processRecords(
+  private async _processRecords(
     records: any,
     fields: ReadonlyArray<IField>,
     progressCallback: (progress: IExportProgress) => void
@@ -146,47 +147,38 @@ export class Exporter {
         })
       )]
 
-    return records.reduce((p: any, record: any) => {
-      return p.then(() => {
-        count++
-        const progressValue = count / records.length
-        progressCallback({
-          value: progressValue,
-          description: 'Mapping item ' + count + ' of ' + records.length
-        })
-        return this.getRecord(record)
-          .then((item) => {
-            items.push(this._map(item, fields))
-            item.files.map((file: any) => {
-              this.files.push(file)
-              items.push(['File', file.filename])
-            })
-          })
+    for (let record of records) {
+      const progressValue = count / records.length
+      progressCallback({
+        value: progressValue,
+        description: 'Mapping item ' + (++count) + ' of ' + records.length
       })
-    }, Promise.resolve()
-    )
-      .then(() => {
-        return items
+      const item = await this.getRecord(record)
+      items.push(this._map(item, fields))
+
+      item.files.map((file: any) => {
+        this.files.push(file)
+        items.push(['File', file.filename])
       })
+    }
+
+    return items
   }
 
-  private _downloadFiles(
+  private async _downloadFiles(
     files: any,
     location: string,
     progressCallback: (progress: IExportProgress) => void
   ): Promise<any> {
-    let count = 0
-    return files.reduce((p: any, file: any) => {
-      return p.then(() => {
-        count++
-        const progressValue = count / files.length
-        progressCallback({
-          value: progressValue,
-          description: 'Downloading file ' + count + ' of ' + files.length
-        })
-        return this.cdm.download(file, dirname(location))
-      })
-    }, Promise.resolve())
-  }
 
+    let count = 0
+    for (let file of files) {
+      const progressValue = count / files.length
+      progressCallback({
+        value: progressValue,
+        description: 'Downloading file ' + (++count) + ' of ' + files.length
+      })
+      await this.cdm.download(file, dirname(location))
+    }
+  }
 }

@@ -192,7 +192,7 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
       >
         <option key="o-none" value="">
           -- Select a field --
-          </option>
+        </option>
         {options.map(f => (
           <option
             key={f.nick}

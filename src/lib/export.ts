@@ -83,7 +83,7 @@ export class Exporter {
       )
 
       item.files = []
-      const pages = object.page || object.node.page || []
+      const pages = this._pages(object)
 
       pages.map((page: any) => {
         item.files.push({
@@ -105,6 +105,19 @@ export class Exporter {
 
       return item
     }
+  }
+
+  private _pages(object: any): ReadonlyArray<any> {
+    let pages: Array<any> = new Array()
+
+    if (object.node && object.node.node) {
+      object.node.node.map((node: any) => {
+        pages = pages.concat(node.page || [])
+      })
+    }
+    const otherPages = object.page || object.node.page || []
+
+    return pages.concat(otherPages)
   }
 
   private _map(item: any, fields: ReadonlyArray<IField>): any {

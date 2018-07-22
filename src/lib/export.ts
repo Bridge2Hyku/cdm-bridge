@@ -75,16 +75,16 @@ export class Exporter {
   }
 
   private async getRecord(record: any): Promise<any> {
+    const item = await this.cdm.item(this.exportAlias, record.pointer)
+
     if (record.filetype === 'cpd') {
-      const item = await this.cdm.item(this.exportAlias, record.pointer)
       const object = await this.cdm.compoundObject(
         this.exportAlias,
         record.pointer
       )
-
-      item.files = []
       const pages = this._pages(object)
 
+      item.files = []
       pages.map((page: any) => {
         item.files.push({
           filename: page.pagefile,
@@ -92,19 +92,16 @@ export class Exporter {
           pointer: page.pageptr
         })
       })
-
-      return item
     }
     else {
-      const item = await this.cdm.item(this.exportAlias, record.pointer)
       item.files = [{
         filename: record.find,
         alias: this.exportAlias,
         pointer: record.pointer
       }]
-
-      return item
     }
+
+    return item
   }
 
   private _pages(object: any): ReadonlyArray<any> {
@@ -134,6 +131,7 @@ export class Exporter {
     fields: ReadonlyArray<IField>,
     progressCallback: (progress: IExportProgress) => void
   ): Promise<any> {
+
     let count = 0
     let items: Array<any> = [['Object Type', 'Filename']
       .concat(

@@ -31,10 +31,10 @@ export class Exporter {
     progressCallback({ value: undefined, description: 'Getting item records' })
 
     const data = await this.records(alias)
-    const items = await this._processRecords(data.records, fields, progressCallback)
+    const csvData = await this._processRecords(data.records, fields, progressCallback)
 
     progressCallback({ value: undefined, description: 'Creating CSV' })
-    const csv = await csvString(items)
+    const csv = await csvString(csvData)
 
     location = download ? this.downloadLocation(location) : location
     writeFile(location, csv, (err) => {

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { createUniqueId } from '../../lib/id-pool'
 
 export enum CheckboxValue {
   On,
@@ -29,20 +30,23 @@ export class Checkbox extends React.Component<ICheckboxProps, ICheckboxState> {
 
   public componentWillMount() {
     const friendlyName = this.props.label || 'unknown'
-    const inputId = `Checkbox_${friendlyName}`
+    const inputId = createUniqueId(`Checkbox_${friendlyName}`)
 
     this.setState({ inputId })
   }
 
-  private onInputRef = (input: HTMLInputElement | null) => {
-    this.input = input
-    this.updateInputState()
+  public componentWillReceiveProps(nextProps: ICheckboxProps) {
+    this.updateInputState(nextProps.value)
   }
 
-  private updateInputState() {
+  private onInputRef = (input: HTMLInputElement | null) => {
+    this.input = input
+    this.updateInputState(this.props.value)
+  }
+
+  private updateInputState(value: CheckboxValue) {
     const input = this.input
     if (input) {
-      const value = this.props.value
       input.indeterminate = value === CheckboxValue.Mixed
       input.checked = value !== CheckboxValue.Off
     }

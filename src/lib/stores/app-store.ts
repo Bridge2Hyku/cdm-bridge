@@ -200,6 +200,18 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
+  public async _removeCrosswalkField(alias: string, field: IField): Promise<void> {
+    if (!this.crosswalk || !this.crosswalk[alias]) {
+      return
+    }
+
+    delete this.crosswalk[alias][field.id]
+    localStorage.setItem('crosswalk', JSON.stringify(this.crosswalk))
+    this.emitUpdate()
+
+    return Promise.resolve()
+  }
+
   public _setPreferencesContentDm(
     hostname: string,
     port: string,
@@ -220,6 +232,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
   }
 
   public _setPreferencesFields(fields: ReadonlyArray<IField>): Promise<any> {
+    const removedFields = this.preferences.fields.filter((field) => {
+      return fields.indexOf(field) === -1
+    })
+
+    removedFields.map((field) => {
+      for (let alias in this.crosswalk) {
+        this._removeCrosswalkField(alias, field)
+      }
+    })
+
     this.preferences.fields = Array.from(fields)
     localStorage.setItem('preferences', JSON.stringify(this.preferences))
 

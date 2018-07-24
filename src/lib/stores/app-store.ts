@@ -233,7 +233,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
   public _setPreferencesFields(fields: ReadonlyArray<IField>): Promise<any> {
     const removedFields = this.preferences.fields.filter((field) => {
-      return fields.indexOf(field) === -1
+      return fields.findIndex(f => f.id === field.id) === -1
     })
 
     removedFields.map((field) => {

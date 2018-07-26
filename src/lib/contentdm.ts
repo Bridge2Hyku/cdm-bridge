@@ -115,6 +115,13 @@ export class ContentDm {
       .then((response) => {
         return response.body
       })
+      .catch((err) => {
+        if (err.message === 'Error: socket hang up') {
+          console.warn(err)
+          return this._request(fnc, params)
+        }
+        return err
+      })
   }
 
   private _fileUrl(alias: string, pointer: string): string {

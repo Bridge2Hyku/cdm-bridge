@@ -120,7 +120,7 @@ export class ContentDm {
           console.warn(err)
           return this._request(fnc, params)
         }
-        return err
+        throw err
       })
   }
 

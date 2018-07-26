@@ -217,6 +217,10 @@ export class AppStore extends TypedBaseStore<IAppState> {
     port: string,
     ssl: boolean
   ): Promise<any> {
+    if (port === '') {
+      port = ssl ? '443' : '80'
+    }
+
     this.preferences.cdm.hostname = hostname
     this.preferences.cdm.port = Number(port)
     this.preferences.cdm.ssl = ssl

@@ -28,6 +28,13 @@ export class Exporter {
     this.exportCrosswalk = crosswalk
     this.files = []
 
+    const missing = this._missingFields(fields, crosswalk)
+    if (missing) {
+      return Promise.reject(
+        new Error(missing.toString().replace(/,/gi, "\n"))
+      )
+    }
+
     progressCallback({ value: undefined, description: 'Getting item records' })
 
     const data = await this.records(alias)
@@ -187,5 +194,25 @@ export class Exporter {
     }
 
     return newLocation + '/' + csvFile
+  }
+
+  private _missingFields(
+    fields: ReadonlyArray<IField>,
+    crosswalk: any
+  ): ReadonlyArray<string> | null {
+    if (!crosswalk) {
+      return ["No fields mapped"]
+    }
+
+    const required = fields.filter(field => field.required)
+    const missing = required.filter(field => {
+      return crosswalk[field.id] === ''
+    })
+
+    const err = missing.map((field) => {
+      return `Missing required field '${field.name}'`
+    })
+
+    return err.length > 0 ? err : null
   }
 }

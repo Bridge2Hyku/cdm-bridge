@@ -44,7 +44,7 @@ export class Dispatcher {
     return this.appStore._setAlias(alias)
   }
 
-  public setCrosswalk(alias: string, field: IField, value: string): Promise<void> {
+  public setCrosswalk(alias: string, field: IField, value: ReadonlyArray<string>): Promise<void> {
     return this.appStore._setCrosswalk(alias, field, value)
   }
 

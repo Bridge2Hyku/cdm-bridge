@@ -179,7 +179,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public _setCrosswalk(
     alias: string,
     field: IField,
-    value: string
+    value: ReadonlyArray<string>
   ): Promise<void> {
     if (!this.crosswalk) {
       this.crosswalk = {}
@@ -188,7 +188,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     if (!this.crosswalk[alias]) {
       let cw: any = {}
       this.preferences.fields.map((f: IField) => {
-        return cw[f.id] = ''
+        return cw[f.id] = [""]
       })
       this.crosswalk[alias] = cw
     }

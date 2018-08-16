@@ -127,8 +127,15 @@ export class Exporter {
   private _map(item: any, fields: ReadonlyArray<IField>): any {
     let mapItem: any = []
     for (let key of fields) {
-      const nick = this.exportCrosswalk[key.id]
-      mapItem.push((typeof item[nick] === 'string') ? item[nick] : '')
+      const nicks = this.exportCrosswalk[key.id].filter((nick: string) => nick !== '')
+
+      let value = '';
+      nicks.map((nick: string) => {
+        value += (typeof item[nick] === 'string') ? item[nick] + "; " : ""
+      })
+      value = value.slice(0, -2)
+
+      mapItem.push(value)
     }
     return ['GenericWork', ''].concat(mapItem)
   }
@@ -206,7 +213,7 @@ export class Exporter {
 
     const required = fields.filter(field => field.required)
     const missing = required.filter(field => {
-      return crosswalk[field.id] === ''
+      return crosswalk[field.id].filter((nick: string) => nick !== '').length === 0
     })
 
     const err = missing.map((field) => {

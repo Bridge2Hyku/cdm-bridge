@@ -144,7 +144,10 @@ export class App extends React.Component<IAppProps, IAppState> {
     if (state.selectedView === ViewType.Export) {
       return (
         <UiView id="export-view">
-          <ExportView progress={state.exportProgress} />
+          <ExportView
+            progress={state.exportProgress}
+            error={state.exportError}
+          />
         </UiView>
       )
     }

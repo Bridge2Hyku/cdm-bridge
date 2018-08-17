@@ -1,5 +1,5 @@
 import { ContentDm, CdmServer } from './contentdm'
-import { IExportProgress, IField } from './app-state'
+import { IExportProgress, IExportError, IField } from './app-state'
 import { csvString } from './csv'
 import { writeFile } from 'fs';
 import { basename, dirname } from 'path';
@@ -21,9 +21,11 @@ export class Exporter {
     download: boolean,
     fields: ReadonlyArray<IField>,
     crosswalk: any,
-    progressCallback: (progress: IExportProgress) => void
+    progressCallback: (progress: IExportProgress) => void,
+    errorCallback: (error: IExportError) => void
   ): Promise<void> {
 
+    const errors: Array<IExportError> = []
     this.exportAlias = alias
     this.exportCrosswalk = crosswalk
     this.files = []
@@ -38,7 +40,15 @@ export class Exporter {
     progressCallback({ value: undefined, description: 'Getting item records' })
 
     const data = await this.records(alias)
-    const csvData = await this._processRecords(data.records, fields, progressCallback)
+    const csvData = await this._processRecords(
+      data.records,
+      fields,
+      progressCallback,
+      (error: IExportError) => {
+        errors.push(error)
+        errorCallback(error)
+      }
+    )
 
     progressCallback({ value: undefined, description: 'Creating CSV' })
     const csv = await csvString(csvData)
@@ -50,6 +60,10 @@ export class Exporter {
       }
       return
     })
+
+    if (errors) {
+      this.processErrors(errors, location)
+    }
 
     if (download && this.files) {
       await this._downloadFiles(this.files, location, progressCallback)
@@ -124,16 +138,26 @@ export class Exporter {
     return pages.concat(otherPages)
   }
 
-  private _map(item: any, fields: ReadonlyArray<IField>): any {
+  private _map(
+    item: any,
+    fields: ReadonlyArray<IField>,
+    errorCallback: (error: IExportError) => void
+  ): any {
     let mapItem: any = []
-    for (let key of fields) {
-      const nicks = this.exportCrosswalk[key.id].filter((nick: string) => nick !== '')
+    for (let field of fields) {
+      const nicks = this.exportCrosswalk[field.id].filter((nick: string) => nick !== '')
 
       let value = '';
       nicks.map((nick: string) => {
         value += (typeof item[nick] === 'string') ? item[nick] + "; " : ""
       })
       value = value.slice(0, -2)
+
+      if (field.required && value === "") {
+        errorCallback({
+          description: `Item ${item['dmrecord']} '${item['title']}' is missing data for required field '${field.name}'`
+        })
+      }
 
       mapItem.push(value)
     }
@@ -143,7 +167,8 @@ export class Exporter {
   private async _processRecords(
     records: any,
     fields: ReadonlyArray<IField>,
-    progressCallback: (progress: IExportProgress) => void
+    progressCallback: (progress: IExportProgress) => void,
+    errorCallback: (error: IExportError) => void
   ): Promise<any> {
 
     let count = 0
@@ -161,7 +186,7 @@ export class Exporter {
         description: 'Mapping item ' + (++count) + ' of ' + records.length
       })
       const item = await this.getRecord(record)
-      items.push(this._map(item, fields))
+      items.push(this._map(item, fields, errorCallback))
 
       item.files.map((file: any) => {
         this.files.push(file)
@@ -221,5 +246,29 @@ export class Exporter {
     })
 
     return err.length > 0 ? err : null
+  }
+
+  private processErrors(errors: ReadonlyArray<IExportError>, location: string) {
+    const date = this.toLocalDateString()
+    const alias = this.exportAlias.replace('/', '')
+    const errorLocation = dirname(location) + `/errors_${alias}_${date}.txt`
+    let errorString = ""
+    errors.map((error) => {
+      errorString += error.description + "\n"
+    })
+    writeFile(errorLocation, errorString, (err) => {
+      if (err) {
+        console.error(err)
+      }
+    })
+  }
+
+  private toLocalDateString(): string {
+    const date = new Date();
+    return String(date.getFullYear()) +
+      ('0' + (date.getMonth() + 1)).slice(-2) +
+      ('0' + date.getDate()).slice(-2) + '_' +
+      ('0' + date.getHours()).slice(-2) +
+      ('0' + date.getMinutes()).slice(-2)
   }
 }

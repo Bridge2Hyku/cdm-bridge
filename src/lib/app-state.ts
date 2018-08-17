@@ -26,6 +26,7 @@ export interface IAppState {
   readonly selectedAlias: string
   readonly selectedView: ViewType | null
   readonly exportProgress: IExportProgress
+  readonly exportError: ReadonlyArray<IExportError>
   readonly errors: ReadonlyArray<Error>
   readonly sidebarWidth: number
   readonly defaultFields: ReadonlyArray<IField>
@@ -45,4 +46,8 @@ export interface IField {
   id: string
   name: string
   required: boolean
-} 
+}
+
+export interface IExportError {
+  readonly description: string
+}

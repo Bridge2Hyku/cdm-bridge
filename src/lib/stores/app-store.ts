@@ -6,7 +6,8 @@ import {
   ViewType,
   IExportProgress,
   IPreferences,
-  IField
+  IField,
+  IExportError
 } from '../app-state'
 import { TypedBaseStore } from './base-store'
 import {
@@ -65,6 +66,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private selectedAlias: string = ''
   private selectedView: ViewType | null = null
   private exportProgress: IExportProgress = { value: undefined }
+  private exportError: ReadonlyArray<IExportError> = new Array<IExportError>()
   private errors: ReadonlyArray<Error> = new Array<Error>()
   private sidebarWidth: number = defaultSidebarWidth
   private defaultFields: ReadonlyArray<IField> = defaultFields
@@ -122,6 +124,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedAlias: this.selectedAlias,
       selectedView: this.selectedView,
       exportProgress: this.exportProgress,
+      exportError: this.exportError,
       errors: this.errors,
       sidebarWidth: this.sidebarWidth,
       defaultFields: this.defaultFields
@@ -302,6 +305,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   public async _export(location: string, download?: boolean): Promise<void> {
     const exporter = new Exporter(this.contentdmServer)
     this.selectedView = ViewType.Export
+    this.exportError = []
     this.emitUpdate()
 
     exporter.export(
@@ -312,6 +316,12 @@ export class AppStore extends TypedBaseStore<IAppState> {
       this.crosswalk[this.selectedAlias],
       (progress) => {
         this.exportProgress = progress
+        this.emitUpdate()
+      },
+      (error) => {
+        const exportErrors = Array.from(this.exportError)
+        exportErrors.push(error)
+        this.exportError = exportErrors
         this.emitUpdate()
       }
     )

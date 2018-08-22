@@ -145,7 +145,9 @@ export class Exporter {
   ): any {
     let mapItem: any = []
     for (let field of fields) {
-      const nicks = this.exportCrosswalk[field.id].filter((nick: string) => nick !== '')
+      const nicks = this.exportCrosswalk[field.id] ?
+        this.exportCrosswalk[field.id].filter((nick: string) => nick !== '') :
+        []
 
       let value = '';
       nicks.map((nick: string) => {

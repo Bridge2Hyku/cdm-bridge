@@ -29,7 +29,7 @@ const defaultFields: ReadonlyArray<IField> = [
   { id: 'keyword', name: 'Keyword', required: true },
   { id: 'rights_statement', name: 'Rights statement', required: true },
   { id: 'contributor', name: 'Contributor', required: false },
-  { id: 'abstract_summary', name: 'Abstract / Summary', required: false },
+  { id: 'abstract_or_summary', name: 'Abstract or Summary', required: false },
   { id: 'license', name: 'License', required: false },
   { id: 'publisher', name: 'Publisher', required: false },
   { id: 'date_created', name: 'Date created', required: false },

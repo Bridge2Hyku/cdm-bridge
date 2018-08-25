@@ -61,7 +61,7 @@ export class Exporter {
       return
     })
 
-    if (errors) {
+    if (errors.length > 0) {
       this.processErrors(errors, location)
     }
 

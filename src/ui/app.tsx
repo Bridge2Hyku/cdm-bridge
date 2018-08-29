@@ -156,8 +156,10 @@ export class App extends React.Component<IAppProps, IAppState> {
       return (
         <UiView id="export-view">
           <ExportView
+            dispatcher={this.props.dispatcher}
             progress={state.exportProgress}
             error={state.exportError}
+            done={state.exportDone}
           />
         </UiView>
       )

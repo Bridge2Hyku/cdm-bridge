@@ -2,11 +2,16 @@ import * as React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 import { IExportProgress, IExportError } from '../../lib/app-state'
+import { Button } from '../button'
+import { Dispatcher } from '../../lib/dispatcher'
+import { Row } from '../layout'
 
 
 interface IExportViewProps {
+  readonly dispatcher: Dispatcher
   readonly progress: IExportProgress
   readonly error: ReadonlyArray<IExportError>
+  readonly done: boolean
 }
 
 export class ExportView extends React.Component<IExportViewProps, {}>{
@@ -17,6 +22,22 @@ export class ExportView extends React.Component<IExportViewProps, {}>{
         <div className="error">
           Found {this.props.error.length} errors, see error log with exported CSV
         </div>
+      )
+    }
+    return
+  }
+
+  public renderDone() {
+    if (this.props.done) {
+      return (
+        <Row className="done-button">
+          <Button
+            onClick={this.onDone}
+            type="submit"
+          >
+            Done
+          </Button>
+        </Row>
       )
     }
     return
@@ -36,8 +57,13 @@ export class ExportView extends React.Component<IExportViewProps, {}>{
         <progress value={this.props.progress.value} />
         <div className="details">{this.props.progress.description}</div>
         {this.renderError()}
+        {this.renderDone()}
       </div>
     )
+  }
+
+  private onDone = () => {
+    this.props.dispatcher.closeExport()
   }
 
 }

@@ -54,6 +54,10 @@ export class Dispatcher {
       .catch((reason) => console.warn(reason))
   }
 
+  public closeExport(): Promise<void> {
+    return this.appStore._closeExport()
+  }
+
   public presentError(error: Error): Promise<void> {
     return this.appStore._pushError(error)
   }

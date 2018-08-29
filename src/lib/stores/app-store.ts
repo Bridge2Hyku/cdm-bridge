@@ -67,6 +67,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private selectedView: ViewType | null = null
   private exportProgress: IExportProgress = { value: undefined }
   private exportError: ReadonlyArray<IExportError> = new Array<IExportError>()
+  private exportDone: boolean = false
   private errors: ReadonlyArray<Error> = new Array<Error>()
   private sidebarWidth: number = defaultSidebarWidth
   private defaultFields: ReadonlyArray<IField> = defaultFields
@@ -125,6 +126,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
       selectedView: this.selectedView,
       exportProgress: this.exportProgress,
       exportError: this.exportError,
+      exportDone: this.exportDone,
       errors: this.errors,
       sidebarWidth: this.sidebarWidth,
       defaultFields: this.defaultFields
@@ -306,6 +308,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const exporter = new Exporter(this.contentdmServer)
     this.selectedView = ViewType.Export
     this.exportError = []
+    this.exportDone = false
     this.emitUpdate()
 
     exporter.export(
@@ -326,16 +329,21 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     )
       .then(() => {
-        this.selectedView = ViewType.Collection
+        this.exportDone = true
         this.emitUpdate()
       })
       .catch((err) => {
-        this.selectedView = ViewType.Collection
+        this._closeExport()
         this._pushError(err)
       })
 
 
     return Promise.resolve()
+  }
+
+  public async _closeExport() {
+    this.selectedView = ViewType.Collection
+    this.emitUpdate()
   }
 
   public async _completeSaveInDesktop(): Promise<any> {

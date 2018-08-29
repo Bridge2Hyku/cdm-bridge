@@ -3,6 +3,7 @@
   align-self: center;
   padding: var(--spacing-double);
   align-items: center;
+
   .title-container {
     max-width: 100%;
     display: flex;
@@ -10,11 +11,13 @@
     align-items: center;
     margin-bottom: var(--spacing);
   }
+
   .icon {
     margin-right: var(--spacing);
     flex: none;
     margin-top: 4px;
   }
+
   .title {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-light);
@@ -22,19 +25,27 @@
     text-overflow: ellipsis;
     overflow: hidden;
   }
+
   .details {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+
   .error {
     color: var(--dialog-error-color);
   }
+
   progress {
     max-width: 100%;
     width: 100%;
     margin-bottom: var(--spacing);
+  }
+
+  .done-button {
+    justify-content: center;
+    margin-top: var(--spacing);
   }
 }
 
@@ -44,9 +55,11 @@
   flex-shrink: 0;
   margin-left: auto;
   width: 230px;
+
   .export-list-item {
     cursor: default;
     padding: 5px var(--spacing);
+
     &:hover {
       --text-color: var(--box-selected-active-text-color);
       --text-secondary-color: var(--box-selected-active-text-color);
@@ -59,6 +72,7 @@
 .export-button {
   width: 100%;
   height: 100%;
+
   .text {
     display: flex;
     flex-direction: column;
@@ -67,7 +81,9 @@
     margin-right: var(--spacing);
     position: relative;
   }
+
   &.open {
+
     button,
     button:focus,
     button:not(:disabled):active,
@@ -77,6 +93,7 @@
       border-color: var(--background-color);
     }
   }
+
   button {
     display: flex;
     flex-direction: row;
@@ -91,6 +108,7 @@
     text-align: left;
     font-weight: var(--font-weight-semibold);
     color: var(--button-text-color);
+
     &:focus,
     &:not(:disabled):active,
     &:not(:disabled):hover {

@@ -68,6 +68,8 @@ export class Exporter {
     if (download && this.files) {
       await this._downloadFiles(this.files, location, progressCallback)
     }
+
+    progressCallback({ value: 1, description: '' })
   }
 
   private async records(

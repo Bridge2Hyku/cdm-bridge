@@ -30,6 +30,7 @@ export interface IAppState {
   readonly selectedView: ViewType | null
   readonly exportProgress: IExportProgress
   readonly exportError: ReadonlyArray<IExportError>
+  readonly exportDone: boolean
   readonly errors: ReadonlyArray<Error>
   readonly sidebarWidth: number
   readonly defaultFields: ReadonlyArray<IField>

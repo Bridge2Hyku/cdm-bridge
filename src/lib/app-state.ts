@@ -1,7 +1,8 @@
 import { CdmServer } from './contentdm'
 
 export enum PopupType {
-  Preferences
+  Preferences,
+  About
 }
 
 export enum ViewType {
@@ -13,7 +14,9 @@ export enum FoldoutType {
   Export
 }
 
-export type Popup = { type: PopupType.Preferences }
+export type Popup =
+  | { type: PopupType.Preferences }
+  | { type: PopupType.About }
 export type Foldout = { type: FoldoutType.Export }
 
 export interface IAppState {

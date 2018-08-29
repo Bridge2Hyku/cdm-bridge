@@ -1,5 +1,4 @@
 :root {
-
   --font-family-sans-serif: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
   --font-size: 12px;
   --font-size-sm: 11px;
@@ -11,7 +10,6 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 800;
   --font-weight-light: 300;
-
   --border-radius: 3px;
   --base-border: 1px solid var(--box-border-color);
   --base-box-shadow: 0 2px 7px var(--shadow-color);
@@ -23,28 +21,24 @@
   --spacing-triple: calc(var(--spacing) * 3);
   --spacing-quad: calc(var(--spacing) * 4);
   --spacing-half: calc(var(--spacing) / 2);
-  --spacing-third: calc(var(--spacing) / 3); 
-
+  --spacing-third: calc(var(--spacing) / 3);
   --button-height: 25px;
-
   --button-background: var(--main-color);
   --button-border-radius: 2px;
   --button-hover-background: #6ad400;
   --button-text-color: #fff;
   --button-focus-border-color: var(--main-color)-600;
-
+  --button-link-color: #0366d6;
   --secondary-button-background: #fafbfc;
   --secondary-button-hover-background: #fff;
   --secondary-button-text-color: var(--text-color);
   --secondary-button-focus-shadow-color: rgba(225, 228, 232, 0.75);
   --secondary-button-focus-border-color: #d1d5da;
-
   --tab-bar-height: 29px;
   --tab-bar-active-color: var(--main-color);
   --tab-bar-background-color: #fff;
   --tab-bar-count-color: var(--text-color);
   --tab-bar-count-background-color: #e1e4e8;
-
   --text-color: #24292e;
   --text-secondary-color: #6a737d;
   --main-color: #66cc00;
@@ -53,15 +47,12 @@
   --box-border-color: #e1e4e8;
   --shadow-color: rgba(71, 83, 95, 0.19);
   --overlay-background-color: rgba(0, 0, 0, 0.4);
-
   --box-background-color: var(--background-color);
   --box-alt-background-color: #f6f8fa;
   --box-skeleton-background-color: #e1e4e8;
-
   --focus-color: var(--main-color);
   --text-field-height: 25px;
   --text-field-focus-shadow-color: rgba(3, 102, 214, 0.25);
-
   --box-selected-text-color: #24292e;
   --box-selected-background-color: #ebeef1;
   --box-selected-border-color: #959da5;
@@ -69,11 +60,8 @@
   --box-selected-active-text-color: #fff;
   --box-selected-active-border-color: #959da5;
   --box-overflow-shadow-background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, white 90%, white 100%);
-
   --popup-z-index: 10;
   --foldout-z-index: calc(var(--popup-z-index) - 2);
-
   --dialog-error-color: #d61010;
-
   --required-field-color: #d61010;
 }

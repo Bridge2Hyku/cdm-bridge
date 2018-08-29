@@ -1,4 +1,4 @@
-import { app, Menu, ipcMain } from 'electron'
+import { app, Menu, ipcMain, shell } from 'electron'
 import { AppWindow } from './app-window'
 import { buildDefaultMenu, MenuEvent } from './menu'
 
@@ -31,6 +31,15 @@ app.on('ready', () => {
       mainWindow.sendMenuEvent(name)
     }
   })
+
+  ipcMain.on(
+    'open-external',
+    (event: Electron.IpcMessageEvent, { path }: { path: string }) => {
+      const result = shell.openExternal(path)
+      event.sender.send('open-external-result', { result })
+    }
+  )
+
 })
 
 function createMainWindow() {

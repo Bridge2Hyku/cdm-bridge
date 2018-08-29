@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ipcRenderer } from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import { CSSTransitionGroup } from 'react-transition-group'
 
 import { TitleBar } from './window';
@@ -18,6 +18,7 @@ import {
   IField
 } from '../lib/app-state'
 import { Preferences } from './preferences'
+import { About } from './about'
 import { ExportView, DropdownState, ExportDropdown } from './export'
 import { CdmCollection, CdmFieldInfo } from '../lib/contentdm'
 import { AppError } from './app-error'
@@ -54,6 +55,8 @@ export class App extends React.Component<IAppProps, IAppState> {
     switch (name) {
       case 'show-preferences':
         return this.props.dispatcher.showPopup({ type: PopupType.Preferences })
+      case 'show-about':
+        return this.props.dispatcher.showPopup({ type: PopupType.About })
     }
   }
 
@@ -103,6 +106,14 @@ export class App extends React.Component<IAppProps, IAppState> {
             dispatcher={this.props.dispatcher}
             preferences={this.state.preferences}
             defaultFields={this.state.defaultFields}
+            onDismissed={this.onPopupDismissed}
+          />
+        )
+      case PopupType.About:
+        return (
+          <About
+            appName={remote.app.getName()}
+            appVersion={remote.app.getVersion()}
             onDismissed={this.onPopupDismissed}
           />
         )

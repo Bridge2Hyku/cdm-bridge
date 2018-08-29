@@ -10,7 +10,9 @@ export function buildDefaultMenu(): Menu {
       label: app.getName(),
       submenu: [
         {
-          role: 'about'
+          label: 'About ' + app.getName(),
+          id: 'about',
+          click: emit('show-about')
         },
         separator,
         {
@@ -76,6 +78,19 @@ export function buildDefaultMenu(): Menu {
       }
     ]
   })
+
+  if (!__DARWIN__) {
+    template.push({
+      label: '&Help',
+      submenu: [
+        {
+          label: '&About ' + app.getName(),
+          id: 'about',
+          click: emit('show-about')
+        }
+      ]
+    })
+  }
 
   return Menu.buildFromTemplate(template);
 }

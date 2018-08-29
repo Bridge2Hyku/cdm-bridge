@@ -1,0 +1,27 @@
+#about {
+  .dialog-content {
+
+    p,
+    h2 {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: var(--spacing);
+    }
+
+    .row-component {
+      justify-content: center;
+    }
+
+    a {
+      text-decoration: none;
+      color: var(--button-link-color);
+    }
+  }
+
+  .logo {
+    img {
+      width: 64px;
+      height: 64px;
+    }
+  }
+}

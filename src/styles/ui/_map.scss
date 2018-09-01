@@ -24,14 +24,17 @@
 .mapping-container {
   overflow-y: auto;
   padding: var(--spacing-double);
+
   .header {
     font-size: var(--font-size-md);
     font-weight: var(--font-weight-light);
     border-bottom: 1px solid var(--box-border-color);
     padding-bottom: var(--spacing);
+
     &.row-component:not(:last-child) {
       margin-bottom: var(--spacing-double);
     }
+
     .target {
       width: 25%;
       max-width: 25%;
@@ -40,17 +43,21 @@
       margin: 0;
       margin-right: var(--spacing);
     }
+
     .source {
       width: 100%;
       max-width: 75%;
       flex: 0 0 75%;
     }
   }
+
   .row-component:not(:last-child) {
     margin-bottom: var(--spacing);
   }
+
   .select-component {
     width: 100%;
+
     label {
       margin-right: var(--spacing);
       width: 25%;
@@ -59,17 +66,21 @@
       display: inline-block;
       white-space: nowrap;
     }
+
     .selects {
       width: 100%;
       max-width: 75%;
+
       select {
         width: 75%;
       }
     }
   }
+
   .mapping-fields {
     .required {
       font-weight: var(--font-weight-bold);
+
       &:after {
         content: "Required";
         font-weight: normal;
@@ -78,6 +89,17 @@
         font-size: var(--font-size-sm);
         margin-left: var(--spacing);
       }
+    }
+  }
+
+  .map-select-component {
+    margin-bottom: var(--spacing-third);
+  }
+
+  .buttons {
+    .button-component {
+      display: block;
+      margin-bottom: var(--spacing-third);
     }
   }
 }

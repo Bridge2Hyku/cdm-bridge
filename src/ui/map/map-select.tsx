@@ -15,6 +15,7 @@ interface IMapSelectProps {
   readonly defaultValue?: string
   readonly onChange?: (value: string, index: number) => void
   readonly onMapFieldAddition?: (field: IField | undefined) => void
+  readonly onMapFieldSubtract?: (field: IField | undefined, index: number) => void
 }
 
 interface IMapSelectState {
@@ -43,9 +44,15 @@ export class MapSelect extends React.Component<IMapSelectProps, IMapSelectState>
     }
   }
 
-  private onMapFieldAddition = (event: React.MouseEvent<HTMLButtonElement>) => {
+  private onMapFieldAddition = (field: IField | undefined) => {
     if (this.props.onMapFieldAddition) {
-      this.props.onMapFieldAddition(this.props.field)
+      this.props.onMapFieldAddition(field)
+    }
+  }
+
+  private onMapFieldSubtract = (field: IField | undefined, index: number) => {
+    if (this.props.onMapFieldSubtract) {
+      this.props.onMapFieldSubtract(field, index)
     }
   }
 
@@ -67,16 +74,32 @@ export class MapSelect extends React.Component<IMapSelectProps, IMapSelectState>
     )
   }
 
-  private renderButton() {
+  private renderButtons() {
+    if (!this.props.values) {
+      return
+    }
+
+    const buttons = this.props.values.map((value, index) => {
+      return (
+        <MapButton
+          key={index}
+          field={this.props.field}
+          index={index}
+          onMapFieldAddition={index === 0 ? this.onMapFieldAddition : undefined}
+          onMapFieldSubtract={index !== 0 ? this.onMapFieldSubtract : undefined}
+        >
+          <FontAwesomeIcon
+            icon={index === 0 ? Icons.faPlus : Icons.faMinus}
+            size="sm"
+          />
+        </MapButton>
+      )
+    })
+
     return (
-      <Button
-        onClick={this.onMapFieldAddition}
-      >
-        <FontAwesomeIcon
-          icon={Icons.faPlus}
-          size="sm"
-        />
-      </Button>
+      <div className="buttons">
+        {buttons}
+      </div>
     )
   }
 
@@ -111,10 +134,38 @@ export class MapSelect extends React.Component<IMapSelectProps, IMapSelectState>
         <div className="selects">
           {this.renderSelects()}
         </div>
-        <div className="button">
-          {this.renderButton()}
-        </div>
+        {this.renderButtons()}
       </div>
     )
   }
 }
+
+interface IMapButtonProps {
+  readonly field: IField | undefined
+  readonly index: number
+  readonly onMapFieldAddition?: (field: IField | undefined) => void
+  readonly onMapFieldSubtract?: (field: IField | undefined, index: number) => void
+}
+
+export class MapButton extends React.Component<IMapButtonProps, {}> {
+
+  public render() {
+    return (
+      <Button
+        onClick={this.onClick}
+      >
+        {this.props.children}
+      </Button>
+    )
+  }
+
+  private onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (this.props.onMapFieldAddition) {
+      this.props.onMapFieldAddition(this.props.field)
+    }
+    if (this.props.onMapFieldSubtract) {
+      this.props.onMapFieldSubtract(this.props.field, this.props.index)
+    }
+  }
+}
+

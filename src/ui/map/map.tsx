@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { CdmFieldInfo } from '../../lib/contentdm'
-import { MapSelect } from '../form'
+import { MapSelect } from './map-select'
 import { Row } from '../layout'
 import { Dispatcher } from '../../lib/dispatcher'
 import { IField } from '../../lib/app-state'
@@ -95,6 +95,17 @@ export class Map extends React.Component<IMapProps, IMapState> {
     this.props.dispatcher.setCrosswalk(this.props.alias, field, value)
   }
 
+  private onMapFieldSubtract = (field: IField | undefined, index: number) => {
+    if (!field) {
+      return
+    }
+
+    const crosswalk = this.getCrosswalk(this.props.alias)
+    const value = Array.from(crosswalk[field.id]) as Array<string>
+    value.splice(index, 1)
+    this.props.dispatcher.setCrosswalk(this.props.alias, field, value)
+  }
+
   private renderMapItem() {
     const fields = this.props.fields
     const crosswalk = this.getCrosswalk(this.props.alias)
@@ -114,6 +125,7 @@ export class Map extends React.Component<IMapProps, IMapState> {
             collectionFieldInfo={this.props.collectionFieldInfo}
             onSelectedFieldChanged={this.onSelectedFieldChanged}
             onMapFieldAddition={this.onMapFieldAddition}
+            onMapFieldSubtract={this.onMapFieldSubtract}
             value={value}
           />
         </Row>
@@ -153,6 +165,7 @@ interface IMapItemProps {
   readonly value: ReadonlyArray<string>
   readonly disabledNicks?: ReadonlyArray<string>
   readonly onMapFieldAddition: (field: IField | undefined) => void
+  readonly onMapFieldSubtract: (field: IField | undefined, index: number) => void
   readonly onSelectedFieldChanged: (
     field: IField,
     value: string,
@@ -211,6 +224,7 @@ class MapItem extends React.Component<IMapItemProps, IMapItemState> {
         values={this.state.value}
         onChange={this.onSelectedChanged}
         onMapFieldAddition={this.props.onMapFieldAddition}
+        onMapFieldSubtract={this.props.onMapFieldSubtract}
       >
         <option key="o-none" value="">
           -- Select a field --

@@ -153,7 +153,7 @@ export class Exporter {
 
       let value = '';
       nicks.map((nick: string) => {
-        value += (typeof item[nick] === 'string') ? item[nick] + "; " : ""
+        value += (typeof item[nick] === 'string') ? item[nick].replace(/;+$/g, '') + "; " : ""
       })
       value = value.slice(0, -2)
 

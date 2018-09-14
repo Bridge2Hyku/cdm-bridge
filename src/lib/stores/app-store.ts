@@ -279,7 +279,17 @@ export class AppStore extends TypedBaseStore<IAppState> {
     const cdm = new ContentDm(this.contentdmServer)
 
     return cdm.collections(CdmType.Unpublished)
-      .then(data => this.collections = data)
+      .then((data) => {
+        if (typeof data === 'string') {
+          const regex = /<body[^>]*>((.|[\n\r])*)<\/body>/im
+          const body = regex.exec(data)
+          if (body) {
+            data = body[1].trim()
+          }
+          throw new Error(data)
+        }
+        this.collections = data
+      })
       .catch((error) => {
         this.collections = null
         this._pushError(error)

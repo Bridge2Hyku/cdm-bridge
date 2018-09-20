@@ -131,13 +131,21 @@ export class Exporter {
     let pages: Array<any> = new Array()
 
     if (object.node && object.node.node) {
-      object.node.node.map((node: any) => {
-        pages = pages.concat(node.page || [])
+      const nodes = this._toArray(object.node.node)
+      nodes.map((node: any) => {
+        pages = pages.concat(this._toArray(node.page))
       })
     }
     const otherPages = object.page || object.node.page || []
 
-    return pages.concat(otherPages)
+    return pages.concat(this._toArray(otherPages))
+  }
+
+  private _toArray(obj: any): Array<any> {
+    if (!obj) {
+      return []
+    }
+    return Array.isArray(obj) ? obj : [obj]
   }
 
   private _map(

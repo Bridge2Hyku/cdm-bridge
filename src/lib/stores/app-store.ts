@@ -341,14 +341,15 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
     )
       .then(() => {
-        remote.powerSaveBlocker.stop(pwrid)
         this.exportDone = true
         this.emitUpdate()
       })
       .catch((err) => {
-        remote.powerSaveBlocker.stop(pwrid)
         this._closeExport()
         this._pushError(err)
+      })
+      .then(() => {
+        remote.powerSaveBlocker.stop(pwrid)
       })
 
 

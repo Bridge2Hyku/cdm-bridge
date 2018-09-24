@@ -292,7 +292,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
       })
       .catch((error) => {
         this.collections = null
-        this._pushError(error)
+        this._pushError(
+          new Error("Unable to get collection information. Please make sure you have the correct CONTENTdm API information in Preferences.")
+        )
         return
       })
       .then(() => this.emitUpdate())

@@ -108,11 +108,15 @@ export class ContentDm {
       },
       forever: true,
       json: true,
-      resolveWithFullResponse: true
+      resolveWithFullResponse: true,
+      simple: false
     }
 
     return rp(options)
       .then((response) => {
+        if (response.statusCode !== 200) {
+          throw new Error(response.statusCode + ': ' + response.statusMessage)
+        }
         return response.body
       })
       .catch((err) => {

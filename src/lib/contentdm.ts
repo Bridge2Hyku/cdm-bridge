@@ -115,6 +115,7 @@ export class ContentDm {
     return rp(options)
       .then((response) => {
         if (response.statusCode !== 200) {
+          console.error(response)
           throw new Error(response.statusCode + ': ' + response.statusMessage)
         }
         return response.body

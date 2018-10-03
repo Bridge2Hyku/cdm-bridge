@@ -108,19 +108,25 @@ export class Exporter {
       const pages = this._pages(object)
 
       item.files = []
-      pages.map((page: any) => {
+      for (let page of pages) {
+        const pageInfo = await this.cdm.item(this.exportAlias, page.pageptr)
+
         item.files.push({
           filename: page.pagefile,
           alias: this.exportAlias,
-          pointer: page.pageptr
+          pointer: page.pageptr,
+          size: pageInfo.cdmfilesize,
+          info: pageInfo
         })
-      })
+      }
     }
     else {
       item.files = [{
         filename: record.find,
         alias: this.exportAlias,
-        pointer: record.pointer
+        pointer: record.pointer,
+        size: item.cdmfilesize,
+        info: null
       }]
     }
 

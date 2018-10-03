@@ -1,6 +1,6 @@
 import * as request from 'request'
 import * as rp from 'request-promise'
-import { createWriteStream, existsSync, rename, } from 'fs'
+import { createWriteStream, existsSync, rename, statSync } from 'fs'
 
 export type CdmServer = {
   hostname: string
@@ -64,14 +64,24 @@ export class ContentDm {
     return this._request('dmGetItemInfo', [alias, pointer])
   }
 
-  public download(file: any, location: string): Promise<any> {
+  public download(
+    file: any,
+    location: string,
+    progressCallback?: (bytesTransfered: number) => void
+  ): Promise<any> {
+
     return new Promise((resolve, reject) => {
       let url = this._fileUrl(file.alias, file.pointer)
       let destination = location + '/' + file.filename
       let part = destination + '.part'
 
       if (existsSync(destination)) {
+        if (progressCallback) {
+          const filesize = statSync(destination).size
+          progressCallback(filesize)
+        }
         resolve()
+        return
       }
 
       const output = createWriteStream(part)
@@ -87,6 +97,11 @@ export class ContentDm {
 
       request.get(url)
         .on('error', (err) => reject(err))
+        .on('data', (data) => {
+          if (progressCallback) {
+            progressCallback(Number(data.length))
+          }
+        })
         .pipe(output)
     })
   }

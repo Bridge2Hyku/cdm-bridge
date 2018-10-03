@@ -4,6 +4,8 @@ import { csvString } from './csv'
 import { writeFile } from 'fs';
 import { basename, dirname } from 'path';
 import { sync } from 'mkdirp'
+import * as filesize from 'filesize';
+
 
 export class Exporter {
   private exportAlias: string = ''
@@ -221,14 +223,17 @@ export class Exporter {
     progressCallback: (progress: IExportProgress) => void
   ): Promise<any> {
 
-    let count = 0
+    let totalTransfered = 0
+    const totalSize = files.reduce((acc: number, cur: any) => acc + Number(cur.size), 0)
+
     for (let file of files) {
-      const progressValue = count / files.length
-      progressCallback({
-        value: progressValue,
-        description: 'Downloading file ' + (++count) + ' of ' + files.length
+      await this.cdm.download(file, dirname(location), (bytes) => {
+        totalTransfered += bytes
+        progressCallback({
+          value: (totalTransfered / totalSize),
+          description: `Downloaded ${filesize(totalTransfered, { round: 0 })} of ${filesize(totalSize, { round: 0 })}`
+        })
       })
-      await this.cdm.download(file, dirname(location))
     }
   }
 

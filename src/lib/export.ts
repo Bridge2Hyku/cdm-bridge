@@ -229,9 +229,12 @@ export class Exporter {
     for (let file of files) {
       await this.cdm.download(file, dirname(location), (bytes) => {
         totalTransfered += bytes
+        const transfered = filesize(totalTransfered, { output: "object" }) as any
+
         progressCallback({
           value: (totalTransfered / totalSize),
-          description: `Downloaded ${filesize(totalTransfered, { round: 0 })} of ${filesize(totalSize, { round: 0 })}`
+          description: `Downloaded ${transfered.value.toFixed(1)} ${transfered.symbol}
+            of ${filesize(totalSize, { round: 1 })}`
         })
       })
     }

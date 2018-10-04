@@ -41,6 +41,10 @@ export class About extends React.Component<IAboutProps, {}> {
               Bridge2Hyku
             </LinkButton> project
           </p>
+          <p>This software was made possible in part by the<br />
+            Institute of Museum and Library Services<br />
+            (LG-70-17-0217-17)
+          </p>
         </DialogContent>
 
         <DialogFooter>

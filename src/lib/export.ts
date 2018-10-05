@@ -99,7 +99,10 @@ export class Exporter {
       })
   }
 
-  private async getRecord(record: any): Promise<any> {
+  private async getRecord(
+    record: any,
+    compoundProgressCallback?: (item: number, total: number) => void
+  ): Promise<any> {
     const item = await this.cdm.item(this.exportAlias, record.pointer)
 
     if (record.filetype === 'cpd') {
@@ -110,7 +113,11 @@ export class Exporter {
       const pages = this._pages(object)
 
       item.files = []
+      let count = 0;
       for (let page of pages) {
+        if (compoundProgressCallback) {
+          compoundProgressCallback(++count, pages.length)
+        }
         const pageInfo = await this.cdm.item(this.exportAlias, page.pageptr)
 
         item.files.push({
@@ -203,9 +210,18 @@ export class Exporter {
       const progressValue = count / records.length
       progressCallback({
         value: progressValue,
-        description: 'Mapping item ' + (++count) + ' of ' + records.length
+        description: `Mapping item ${++count} of ${records.length}`
       })
-      const item = await this.getRecord(record)
+
+      const item = await this.getRecord(record, (cpo, cpototal) => {
+        if (cpototal > 30) { // threshold so the display doesn't get to crazy
+          progressCallback({
+            value: progressValue,
+            description: `Mapping item ${count} of ${records.length}`,
+            subdescription: `Getting compound object item record ${cpo} of ${cpototal}`
+          })
+        }
+      })
       items.push(this._map(item, fields, errorCallback))
 
       item.files.map((file: any) => {

@@ -39,6 +39,7 @@ export interface IAppState {
 export interface IExportProgress {
   readonly value: number | undefined
   readonly description?: string
+  readonly subdescription?: string
 }
 
 export interface IPreferences {

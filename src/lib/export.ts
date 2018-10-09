@@ -250,7 +250,8 @@ export class Exporter {
         progressCallback({
           value: (totalTransfered / totalSize),
           description: `Downloaded ${transfered.value.toFixed(1)} ${transfered.symbol}
-            of ${filesize(totalSize, { round: 1 })}`
+            of ${filesize(totalSize, { round: 1 })}`,
+          subdescription: `Downloading ${file.filename}`
         })
       })
     }

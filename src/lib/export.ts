@@ -245,7 +245,7 @@ export class Exporter {
   ): Promise<any> {
 
     let totalTransfered = 0
-    const totalSize = files.reduce((acc: number, cur: any) => acc + Number(cur.size), 0)
+    const totalSize = this.totalFileSize(files)
 
     for (let file of files) {
       await this.cdm.download(file, dirname(location), (bytes) => {
@@ -260,6 +260,10 @@ export class Exporter {
         })
       })
     }
+  }
+
+  private totalFileSize(files: any): number {
+    return files.reduce((acc: number, cur: any) => acc + Number(cur.size), 0)
   }
 
   private downloadLocation(location: string): string {

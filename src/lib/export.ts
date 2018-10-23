@@ -168,6 +168,11 @@ export class Exporter {
     fields: ReadonlyArray<IField>,
     errorCallback: (error: IExportError) => void
   ): any {
+
+    if (!item) {
+      return []
+    }
+
     let mapItem: any = []
     for (let field of fields) {
       const nicks = this.exportCrosswalk[field.id] ?
@@ -188,7 +193,7 @@ export class Exporter {
 
       mapItem.push(value)
     }
-    return ['GenericWork', ''].concat(mapItem)
+    return mapItem
   }
 
   private async _processRecords(
@@ -222,11 +227,11 @@ export class Exporter {
           })
         }
       })
-      items.push(this._map(item, fields, errorCallback))
+      items.push(['GenericWork', ''].concat(this._map(item, fields, errorCallback)))
 
       item.files.map((file: any) => {
         this.files.push(file)
-        items.push(['File', file.filename])
+        items.push(['File', file.filename].concat(this._map(file.info, fields, errorCallback)))
       })
     }
 

@@ -56,6 +56,7 @@ export class ExportView extends React.Component<IExportViewProps, {}>{
         </div>
         <progress value={this.props.progress.value} />
         <div className="details">{this.props.progress.description}</div>
+        <div className="subdetails">{this.props.progress.subdescription}</div>
         {this.renderError()}
         {this.renderDone()}
       </div>

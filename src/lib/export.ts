@@ -4,6 +4,8 @@ import { csvString } from './csv'
 import { writeFile } from 'fs';
 import { basename, dirname } from 'path';
 import { sync } from 'mkdirp'
+import * as filesize from 'filesize';
+
 
 export class Exporter {
   private exportAlias: string = ''
@@ -97,7 +99,10 @@ export class Exporter {
       })
   }
 
-  private async getRecord(record: any): Promise<any> {
+  private async getRecord(
+    record: any,
+    compoundProgressCallback?: (item: number, total: number) => void
+  ): Promise<any> {
     const item = await this.cdm.item(this.exportAlias, record.pointer)
 
     if (record.filetype === 'cpd') {
@@ -108,19 +113,29 @@ export class Exporter {
       const pages = this._pages(object)
 
       item.files = []
-      pages.map((page: any) => {
+      let count = 0;
+      for (let page of pages) {
+        if (compoundProgressCallback) {
+          compoundProgressCallback(++count, pages.length)
+        }
+        const pageInfo = await this.cdm.item(this.exportAlias, page.pageptr)
+
         item.files.push({
           filename: page.pagefile,
           alias: this.exportAlias,
-          pointer: page.pageptr
+          pointer: page.pageptr,
+          size: pageInfo.cdmfilesize,
+          info: pageInfo
         })
-      })
+      }
     }
     else {
       item.files = [{
         filename: record.find,
         alias: this.exportAlias,
-        pointer: record.pointer
+        pointer: record.pointer,
+        size: item.cdmfilesize,
+        info: null
       }]
     }
 
@@ -195,9 +210,18 @@ export class Exporter {
       const progressValue = count / records.length
       progressCallback({
         value: progressValue,
-        description: 'Mapping item ' + (++count) + ' of ' + records.length
+        description: `Mapping item ${++count} of ${records.length}`
       })
-      const item = await this.getRecord(record)
+
+      const item = await this.getRecord(record, (cpo, cpototal) => {
+        if (cpototal > 30) { // threshold so the display doesn't get to crazy
+          progressCallback({
+            value: progressValue,
+            description: `Mapping item ${count} of ${records.length}`,
+            subdescription: `Getting compound object item record ${cpo} of ${cpototal}`
+          })
+        }
+      })
       items.push(this._map(item, fields, errorCallback))
 
       item.files.map((file: any) => {
@@ -215,14 +239,21 @@ export class Exporter {
     progressCallback: (progress: IExportProgress) => void
   ): Promise<any> {
 
-    let count = 0
+    let totalTransfered = 0
+    const totalSize = files.reduce((acc: number, cur: any) => acc + Number(cur.size), 0)
+
     for (let file of files) {
-      const progressValue = count / files.length
-      progressCallback({
-        value: progressValue,
-        description: 'Downloading file ' + (++count) + ' of ' + files.length
+      await this.cdm.download(file, dirname(location), (bytes) => {
+        totalTransfered += bytes
+        const transfered = filesize(totalTransfered, { output: "object" }) as any
+
+        progressCallback({
+          value: (totalTransfered / totalSize),
+          description: `Downloaded ${transfered.value.toFixed(1)} ${transfered.symbol}
+            of ${filesize(totalSize, { round: 1 })}`,
+          subdescription: `Downloading ${file.filename}`
+        })
       })
-      await this.cdm.download(file, dirname(location))
     }
   }
 

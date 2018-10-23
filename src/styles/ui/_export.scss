@@ -26,14 +26,20 @@
     overflow: hidden;
   }
 
-  .details {
+  .details,
+  .subdetails {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 18px;
+    height: 18px;
+    font-family: var(--font-family-monospace);
   }
 
   .error {
+    line-height: 18px;
+    height: 18px;
     color: var(--dialog-error-color);
   }
 

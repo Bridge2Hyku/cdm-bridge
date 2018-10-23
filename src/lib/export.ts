@@ -71,7 +71,11 @@ export class Exporter {
       await this._downloadFiles(this.files, location, progressCallback)
     }
 
-    progressCallback({ value: 1, description: '' })
+    progressCallback({
+      value: 1,
+      description: `Mapped ${data.records.length} items`,
+      subdescription: `Collection total file size: ${filesize(this.totalFileSize(this.files))}`
+    })
   }
 
   private async records(

@@ -1,5 +1,10 @@
 import { ContentDm, CdmServer } from './contentdm'
-import { IExportProgress, IExportError, IField } from './app-state'
+import {
+  IExportProgress,
+  IExportError,
+  IField,
+  ICrosswalkFieldHash
+} from './app-state'
 import { csvString } from './csv'
 import { writeFile } from 'fs';
 import { basename, dirname } from 'path';
@@ -22,7 +27,7 @@ export class Exporter {
     location: string,
     download: boolean,
     fields: ReadonlyArray<IField>,
-    crosswalk: any,
+    crosswalk: ICrosswalkFieldHash,
     progressCallback: (progress: IExportProgress) => void,
     errorCallback: (error: IExportError) => void
   ): Promise<void> {
@@ -180,7 +185,7 @@ export class Exporter {
     let mapItem: any = []
     for (let field of fields) {
       const nicks = this.exportCrosswalk[field.id] ?
-        this.exportCrosswalk[field.id].filter((nick: string) => nick !== '') :
+        this.exportCrosswalk[field.id].nicks.filter((nick: string) => nick !== '') :
         []
 
       let value = '';
@@ -286,7 +291,7 @@ export class Exporter {
 
   private _missingFields(
     fields: ReadonlyArray<IField>,
-    crosswalk: any
+    crosswalk: ICrosswalkFieldHash
   ): ReadonlyArray<string> | null {
     if (!crosswalk) {
       return ["No fields mapped"]
@@ -294,7 +299,7 @@ export class Exporter {
 
     const required = fields.filter(field => field.required)
     const missing = required.filter(field => {
-      return crosswalk[field.id].filter((nick: string) => nick !== '').length === 0
+      return crosswalk[field.id].nicks.filter((nick: string) => nick !== '').length === 0
     })
 
     const err = missing.map((field) => {

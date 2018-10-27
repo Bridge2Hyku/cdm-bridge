@@ -7,7 +7,10 @@ import {
   IExportProgress,
   IPreferences,
   IField,
-  IExportError
+  ICrosswalk,
+  ICrosswalkFieldHash,
+  IExportError,
+  ICrosswalkField
 } from '../app-state'
 import { TypedBaseStore } from './base-store'
 import {
@@ -62,7 +65,7 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private collections: Array<CdmCollection> | null = null
   private collectionFieldInfo: Array<CdmFieldInfo> | null = null
   private contentdmServer: CdmServer | null = null
-  private crosswalk: any | null = null
+  private crosswalk: ICrosswalk = {}
   private selectedAlias: string = ''
   private selectedView: ViewType | null = null
   private exportProgress: IExportProgress = { value: undefined }
@@ -95,9 +98,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     this.collections = []
 
-    this.crosswalk = JSON.parse(
+    this.crosswalk = this._convertCrosswalk(JSON.parse(
       String(localStorage.getItem('crosswalk'))
-    )
+    ) as ICrosswalk)
 
     if (!this.preferences) {
       this.preferences = defaultPreferences
@@ -191,13 +194,16 @@ export class AppStore extends TypedBaseStore<IAppState> {
     }
 
     if (!this.crosswalk[alias]) {
-      let cw: any = {}
+      let cw: ICrosswalkFieldHash = {}
       this.preferences.fields.map((f: IField) => {
-        return cw[f.id] = [""]
+        return cw[f.id] = {
+          nicks: [""],
+          itemExport: false
+        }
       })
       this.crosswalk[alias] = cw
     }
-    this.crosswalk[alias][field.id] = value
+    this.crosswalk[alias][field.id].nicks = value
 
     localStorage.setItem('crosswalk', JSON.stringify(this.crosswalk))
     this.emitUpdate()
@@ -386,6 +392,29 @@ export class AppStore extends TypedBaseStore<IAppState> {
       }
       reject('No export location set')
     })
+  }
+
+  private _convertCrosswalk(crosswalk: ICrosswalk): ICrosswalk {
+    let newCrosswalk: ICrosswalk = {}
+    for (let alias in crosswalk) {
+      newCrosswalk[alias] = {}
+      for (let f in crosswalk[alias]) {
+        newCrosswalk[alias][f] = this._checkCrosswalkFields(crosswalk[alias][f])
+      }
+    }
+
+    return newCrosswalk
+  }
+
+  private _checkCrosswalkFields(field: ICrosswalkField): ICrosswalkField {
+    if (field.nicks === undefined) {
+      return {
+        nicks: [""],
+        itemExport: false
+      }
+    }
+
+    return field
   }
 
 }

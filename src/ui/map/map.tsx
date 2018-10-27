@@ -4,7 +4,7 @@ import { CdmFieldInfo } from '../../lib/contentdm'
 import { MapSelect } from './map-select'
 import { Row } from '../layout'
 import { Dispatcher } from '../../lib/dispatcher'
-import { IField } from '../../lib/app-state'
+import { IField, ICrosswalkFieldHash } from '../../lib/app-state'
 
 interface IMapProps {
   readonly dispatcher: Dispatcher
@@ -40,11 +40,10 @@ export class Map extends React.Component<IMapProps, IMapState> {
   private loadDisabledNicks(alias: string) {
     const crosswalk = this.getCrosswalk(alias)
     const usedNicksArray = Object.keys(crosswalk)
-      .map(id => crosswalk[id])
+      .map(id => crosswalk[id].nicks || [])
       .map(nicks => nicks.filter((nick: string) => nick !== ""))
-      .filter(nick => nick !== "")
 
-    const usedNicks = [].concat(...usedNicksArray)
+    const usedNicks = [].concat.apply([], usedNicksArray)
 
     this.setState({ disabledNicks: usedNicks })
   }
@@ -68,16 +67,19 @@ export class Map extends React.Component<IMapProps, IMapState> {
     this.setState({ disabledNicks: fields })
   }
 
-  private getCrosswalk(alias: string) {
+  private getCrosswalk(alias: string): ICrosswalkFieldHash {
     const crosswalk = this.props.crosswalk || {}
     if (!this.props.fields) {
-      return null
+      return {}
     }
 
     if (!crosswalk[alias]) {
-      let cw: any = {}
+      let cw: ICrosswalkFieldHash = {}
       this.props.fields.map(f => {
-        return cw[f.id] = [""]
+        return cw[f.id] = {
+          nicks: [""],
+          itemExport: false
+        }
       })
       return cw
     }
@@ -91,7 +93,7 @@ export class Map extends React.Component<IMapProps, IMapState> {
     }
 
     const crosswalk = this.getCrosswalk(this.props.alias)
-    const value = crosswalk[field.id].concat([""])
+    const value = crosswalk[field.id].nicks.concat([""])
     this.props.dispatcher.setCrosswalk(this.props.alias, field, value)
   }
 
@@ -100,8 +102,8 @@ export class Map extends React.Component<IMapProps, IMapState> {
       return
     }
 
-    const crosswalk = this.getCrosswalk(this.props.alias)
-    const value = Array.from(crosswalk[field.id]) as Array<string>
+    const crosswalk: ICrosswalkFieldHash = this.getCrosswalk(this.props.alias)
+    const value = Array.from(crosswalk[field.id].nicks) as Array<string>
     value.splice(index, 1)
     this.props.dispatcher.setCrosswalk(this.props.alias, field, value)
   }
@@ -114,7 +116,8 @@ export class Map extends React.Component<IMapProps, IMapState> {
     }
 
     const mapitems = fields.map((field, index) => {
-      const value = crosswalk[field.id] || [""]
+      const value = crosswalk[field.id] ?
+        crosswalk[field.id].nicks || [""] : [""]
 
       return (
         <Row key={index}>

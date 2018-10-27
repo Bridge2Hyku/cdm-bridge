@@ -170,7 +170,7 @@ export class Exporter {
   private _map(
     item: any,
     fields: ReadonlyArray<IField>,
-    errorCallback: (error: IExportError) => void
+    errorCallback?: (error: IExportError) => void
   ): any {
 
     if (!item) {
@@ -189,7 +189,7 @@ export class Exporter {
       })
       value = value.slice(0, -2)
 
-      if (field.required && value === "") {
+      if (errorCallback && field.required && value === "") {
         errorCallback({
           description: `Item ${item['dmrecord']} '${item['title']}' is missing data for required field '${field.name}'`
         })
@@ -235,7 +235,7 @@ export class Exporter {
 
       item.files.map((file: any) => {
         this.files.push(file)
-        items.push(['File', file.filename].concat(this._map(file.info, fields, errorCallback)))
+        items.push(['File', file.filename].concat(this._map(file.info, fields)))
       })
     }
 

@@ -1,5 +1,10 @@
 import { ContentDm, CdmServer } from './contentdm'
-import { IExportProgress, IExportError, IField } from './app-state'
+import {
+  IExportProgress,
+  IExportError,
+  IField,
+  ICrosswalkFieldHash
+} from './app-state'
 import { csvString } from './csv'
 import { writeFile } from 'fs';
 import { basename, dirname } from 'path';
@@ -22,7 +27,7 @@ export class Exporter {
     location: string,
     download: boolean,
     fields: ReadonlyArray<IField>,
-    crosswalk: any,
+    crosswalk: ICrosswalkFieldHash,
     progressCallback: (progress: IExportProgress) => void,
     errorCallback: (error: IExportError) => void
   ): Promise<void> {
@@ -71,7 +76,11 @@ export class Exporter {
       await this._downloadFiles(this.files, location, progressCallback)
     }
 
-    progressCallback({ value: 1, description: '' })
+    progressCallback({
+      value: 1,
+      description: `Mapped ${data.records.length} items`,
+      subdescription: `Collection total file size: ${filesize(this.totalFileSize(this.files))}`
+    })
   }
 
   private async records(
@@ -166,12 +175,17 @@ export class Exporter {
   private _map(
     item: any,
     fields: ReadonlyArray<IField>,
-    errorCallback: (error: IExportError) => void
+    errorCallback?: (error: IExportError) => void
   ): any {
+
+    if (!item) {
+      return []
+    }
+
     let mapItem: any = []
     for (let field of fields) {
       const nicks = this.exportCrosswalk[field.id] ?
-        this.exportCrosswalk[field.id].filter((nick: string) => nick !== '') :
+        this.exportCrosswalk[field.id].nicks.filter((nick: string) => nick !== '') :
         []
 
       let value = '';
@@ -180,7 +194,7 @@ export class Exporter {
       })
       value = value.slice(0, -2)
 
-      if (field.required && value === "") {
+      if (errorCallback && field.required && value === "") {
         errorCallback({
           description: `Item ${item['dmrecord']} '${item['title']}' is missing data for required field '${field.name}'`
         })
@@ -188,7 +202,7 @@ export class Exporter {
 
       mapItem.push(value)
     }
-    return ['GenericWork', ''].concat(mapItem)
+    return mapItem
   }
 
   private async _processRecords(
@@ -222,11 +236,11 @@ export class Exporter {
           })
         }
       })
-      items.push(this._map(item, fields, errorCallback))
+      items.push(['GenericWork', ''].concat(this._map(item, fields, errorCallback)))
 
       item.files.map((file: any) => {
         this.files.push(file)
-        items.push(['File', file.filename])
+        items.push(['File', file.filename].concat(this._map(file.info, fields)))
       })
     }
 
@@ -240,7 +254,7 @@ export class Exporter {
   ): Promise<any> {
 
     let totalTransfered = 0
-    const totalSize = files.reduce((acc: number, cur: any) => acc + Number(cur.size), 0)
+    const totalSize = this.totalFileSize(files)
 
     for (let file of files) {
       await this.cdm.download(file, dirname(location), (bytes) => {
@@ -255,6 +269,10 @@ export class Exporter {
         })
       })
     }
+  }
+
+  private totalFileSize(files: any): number {
+    return files.reduce((acc: number, cur: any) => acc + Number(cur.size), 0)
   }
 
   private downloadLocation(location: string): string {
@@ -273,7 +291,7 @@ export class Exporter {
 
   private _missingFields(
     fields: ReadonlyArray<IField>,
-    crosswalk: any
+    crosswalk: ICrosswalkFieldHash
   ): ReadonlyArray<string> | null {
     if (!crosswalk) {
       return ["No fields mapped"]
@@ -281,7 +299,7 @@ export class Exporter {
 
     const required = fields.filter(field => field.required)
     const missing = required.filter(field => {
-      return crosswalk[field.id].filter((nick: string) => nick !== '').length === 0
+      return crosswalk[field.id].nicks.filter((nick: string) => nick !== '').length === 0
     })
 
     const err = missing.map((field) => {

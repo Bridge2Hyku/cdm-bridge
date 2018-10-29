@@ -53,6 +53,19 @@ export interface IField {
   required: boolean
 }
 
+export interface ICrosswalkField {
+  nicks: ReadonlyArray<string>
+  itemExport: boolean
+}
+
+export interface ICrosswalkFieldHash {
+  [key: string]: ICrosswalkField
+}
+
+export interface ICrosswalk {
+  [key: string]: ICrosswalkFieldHash
+}
+
 export interface IExportError {
   readonly description: string
 }

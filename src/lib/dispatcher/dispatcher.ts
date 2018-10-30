@@ -48,6 +48,10 @@ export class Dispatcher {
     return this.appStore._setCrosswalk(alias, field, value)
   }
 
+  public setCrosswalkItemExport(alias: string, field: IField, value: boolean): Promise<void> {
+    return this.appStore._setCrosswalkItemExport(alias, field, value)
+  }
+
   public export(download?: boolean): Promise<void> {
     return this.appStore._completeSaveInDesktop()
       .then(location => this.appStore._export(location, download))

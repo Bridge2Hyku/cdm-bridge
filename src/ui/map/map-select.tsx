@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { createUniqueId, releaseUniqueId } from '../../lib/id-pool'
 import * as classNames from 'classnames'
-import { IField } from '../../lib/app-state';
+import { IField } from '../../lib/app-state'
 import { Button } from '../button'
+import { Checkbox, CheckboxValue } from '../form'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Icons from "@fortawesome/free-solid-svg-icons"
 
@@ -11,11 +12,13 @@ interface IMapSelectProps {
   readonly label?: string
   readonly labelClassName?: string
   readonly values?: ReadonlyArray<string>
+  readonly itemExport?: boolean
   readonly className?: string
   readonly defaultValue?: string
   readonly onChange?: (value: string, index: number) => void
   readonly onMapFieldAddition?: (field: IField | undefined) => void
   readonly onMapFieldSubtract?: (field: IField | undefined, index: number) => void
+  readonly onMapItemExportChange?: (field: IField | undefined) => void
 }
 
 interface IMapSelectState {
@@ -126,11 +129,22 @@ export class MapSelect extends React.Component<IMapSelectProps, IMapSelectState>
     })
   }
 
+  public renderCheckbox() {
+    return (
+      <MapCheckbox
+        field={this.props.field}
+        value={this.props.itemExport}
+        onChange={this.props.onMapItemExportChange}
+      />
+    )
+  }
+
   public render() {
     const className = classNames('select-component', this.props.className)
     return (
       <div className={className}>
         {this.renderLabel()}
+        {this.renderCheckbox()}
         <div className="selects">
           {this.renderSelects()}
         </div>
@@ -165,6 +179,30 @@ export class MapButton extends React.Component<IMapButtonProps, {}> {
     }
     if (this.props.onMapFieldSubtract) {
       this.props.onMapFieldSubtract(this.props.field, this.props.index)
+    }
+  }
+}
+
+interface IMapCheckboxProps {
+  readonly field: IField | undefined
+  readonly value: boolean | undefined
+  readonly onChange?: (field: IField | undefined) => void
+}
+
+export class MapCheckbox extends React.Component<IMapCheckboxProps, {}> {
+
+  public render() {
+    return (
+      <Checkbox
+        value={this.props.value ? CheckboxValue.On : CheckboxValue.Off}
+        onChange={this.onChange}
+      />
+    )
+  }
+
+  private onChange = (event: React.FormEvent<HTMLInputElement>) => {
+    if (this.props.onChange) {
+      this.props.onChange(this.props.field)
     }
   }
 }

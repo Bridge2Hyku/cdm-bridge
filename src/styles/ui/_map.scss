@@ -35,13 +35,27 @@
       margin-bottom: var(--spacing-double);
     }
 
+    >div {
+      align-self: flex-end;
+    }
+
+    .target,
+    .item {
+      display: inline-block;
+      margin: 0;
+    }
+
     .target {
       width: 25%;
       max-width: 25%;
       min-width: 25%;
-      display: inline-block;
-      margin: 0;
-      margin-right: var(--spacing);
+    }
+
+    .item {
+      width: 10%;
+      max-width: 10%;
+      min-width: 10%;
+      text-align: center;
     }
 
     .source {
@@ -59,7 +73,6 @@
     width: 100%;
 
     label {
-      margin-right: var(--spacing);
       width: 25%;
       max-width: 25%;
       min-width: 25%;
@@ -67,12 +80,22 @@
       white-space: nowrap;
     }
 
+    .checkbox-component {
+      width: 10%;
+      max-width: 10%;
+      min-width: 10%;
+      display: inline-block;
+      margin: 0;
+      text-align: center;
+    }
+
     .selects {
       width: 100%;
       max-width: 75%;
+      margin-right: var(--spacing);
 
       select {
-        width: 75%;
+        width: 100%;
       }
     }
   }

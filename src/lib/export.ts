@@ -175,7 +175,8 @@ export class Exporter {
   private _map(
     item: any,
     fields: ReadonlyArray<IField>,
-    errorCallback?: (error: IExportError) => void
+    errorCallback?: (error: IExportError) => void,
+    itemLevel?: boolean
   ): any {
 
     if (!item) {
@@ -187,12 +188,19 @@ export class Exporter {
       const nicks = this.exportCrosswalk[field.id] ?
         this.exportCrosswalk[field.id].nicks.filter((nick: string) => nick !== '') :
         []
+      const exportItem = this.exportCrosswalk[field.id] ?
+        this.exportCrosswalk[field.id].itemExport : false
 
-      let value = '';
-      nicks.map((nick: string) => {
-        value += (typeof item[nick] === 'string') ? item[nick].replace(/;+$/g, '') + "; " : ""
-      })
-      value = value.slice(0, -2)
+      let value = ''
+      if (itemLevel && !exportItem) {
+        value = ''
+      }
+      else {
+        nicks.map((nick: string) => {
+          value += (typeof item[nick] === 'string') ? item[nick].replace(/;+$/g, '') + "; " : ""
+        })
+        value = value.slice(0, -2)
+      }
 
       if (errorCallback && field.required && value === "") {
         errorCallback({
@@ -240,7 +248,7 @@ export class Exporter {
 
       item.files.map((file: any) => {
         this.files.push(file)
-        items.push(['File', file.filename].concat(this._map(file.info, fields)))
+        items.push(['File', file.filename].concat(this._map(file.info, fields, undefined, true)))
       })
     }
 

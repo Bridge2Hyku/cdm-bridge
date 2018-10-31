@@ -22,6 +22,7 @@
 }
 
 .mapping-container {
+  overflow-x: hidden;
   overflow-y: auto;
   padding: var(--spacing-double);
 

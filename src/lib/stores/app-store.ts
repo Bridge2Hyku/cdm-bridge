@@ -196,6 +196,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
     if (!this.crosswalk[alias]) {
       this.crosswalk[alias] = this._crosswalkDefault()
     }
+    if (!this.crosswalk[alias][field.id]) {
+      this.crosswalk[alias][field.id] = this._crosswalkDefaultField()
+    }
     this.crosswalk[alias][field.id].nicks = value
 
     localStorage.setItem('crosswalk', JSON.stringify(this.crosswalk))
@@ -227,6 +230,9 @@ export class AppStore extends TypedBaseStore<IAppState> {
 
     if (!this.crosswalk[alias]) {
       this.crosswalk[alias] = this._crosswalkDefault()
+    }
+    if (!this.crosswalk[alias][field.id]) {
+      this.crosswalk[alias][field.id] = this._crosswalkDefaultField()
     }
     this.crosswalk[alias][field.id].itemExport = value
 
@@ -433,13 +439,17 @@ export class AppStore extends TypedBaseStore<IAppState> {
   private _crosswalkDefault(): ICrosswalkFieldHash {
     let cw: ICrosswalkFieldHash = {}
     this.preferences.fields.map((f: IField) => {
-      return cw[f.id] = {
-        nicks: [""],
-        itemExport: false
-      }
+      return cw[f.id] = this._crosswalkDefaultField()
     })
 
     return cw
+  }
+
+  private _crosswalkDefaultField(): ICrosswalkField {
+    return {
+      nicks: [""],
+      itemExport: false
+    }
   }
 
 }

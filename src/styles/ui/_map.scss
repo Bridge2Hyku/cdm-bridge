@@ -50,6 +50,7 @@
       width: 25%;
       max-width: 25%;
       min-width: 25%;
+      margin-right: var(--spacing-half);
     }
 
     .item {
@@ -57,12 +58,13 @@
       max-width: 10%;
       min-width: 10%;
       text-align: center;
+      margin: 0 var(--spacing-half);
     }
 
     .source {
-      width: 100%;
-      max-width: 75%;
-      flex: 0 0 75%;
+      width: 65%;
+      max-width: 65%;
+      margin-left: var(--spacing-half);
     }
   }
 
@@ -79,6 +81,7 @@
       min-width: 25%;
       display: inline-block;
       white-space: nowrap;
+      margin-right: var(--spacing-half);
     }
 
     .checkbox-component {
@@ -88,12 +91,14 @@
       display: inline-block;
       margin: 0;
       text-align: center;
+      margin: 0 var(--spacing-half);
     }
 
     .selects {
       width: 100%;
       max-width: 75%;
       margin-right: var(--spacing);
+      margin-left: var(--spacing-half);
 
       select {
         width: 100%;

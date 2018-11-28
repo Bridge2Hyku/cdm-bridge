@@ -6,7 +6,7 @@
 ![Top Language](https://img.shields.io/github/languages/top/Bridge2Hyku/cdm-bridge.svg?style=flate&colorB=green)
 
 
-CDM Bridge is an open source [Electron](https://electronjs.org/)-based [CONTENTdm](https://www.oclc.org/en/contentdm.html) migration tool. It is written in [TypeScript](https://www.typescriptlang.org/) and uses [React](https://reactjs.org/).
+CDM Bridge is an open source [Electron](https://electronjs.org/)-based [CONTENTdm](https://www.oclc.org/en/contentdm.html) migration tool. It is written in [TypeScript](https://www.typescriptlang.org/) and uses [React](https://reactjs.org/). Learn more about using CDM Bridge by reading [Getting Started](https://github.com/Bridge2Hyku/cdm-bridge/wiki).
 
 Part of the [Bridge2Hyku](https://bridge2hyku.github.io/) project.
 

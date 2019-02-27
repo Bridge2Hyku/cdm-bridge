@@ -6,7 +6,11 @@ import {
   ICrosswalkFieldHash
 } from './app-state'
 import { csvString } from './csv'
-import { writeFile } from 'fs';
+import {
+  writeFile,
+  createWriteStream,
+  WriteStream
+} from 'fs';
 import { basename, dirname } from 'path';
 import { sync } from 'mkdirp'
 import * as filesize from 'filesize';
@@ -46,27 +50,21 @@ export class Exporter {
 
     progressCallback({ value: undefined, description: 'Getting item records' })
 
+    location = download ? this.downloadLocation(location) : location
+    const exportStream = createWriteStream(location)
     const data = await this.records(alias)
-    const csvData = await this._processRecords(
+
+    await this._processRecords(
       data.records,
       fields,
+      exportStream,
       progressCallback,
       (error: IExportError) => {
         errors.push(error)
         errorCallback(error)
       }
     )
-
-    progressCallback({ value: undefined, description: 'Creating CSV' })
-    const csv = await csvString(csvData)
-
-    location = download ? this.downloadLocation(location) : location
-    writeFile(location, csv, (err) => {
-      if (err) {
-        return Promise.reject(err)
-      }
-      return
-    })
+    exportStream.end();
 
     if (errors.length > 0) {
       this.processErrors(errors, location)
@@ -216,6 +214,7 @@ export class Exporter {
   private async _processRecords(
     records: any,
     fields: ReadonlyArray<IField>,
+    exportStream: WriteStream,
     progressCallback: (progress: IExportProgress) => void,
     errorCallback: (error: IExportError) => void
   ): Promise<any> {
@@ -250,9 +249,13 @@ export class Exporter {
         this.files.push(file)
         items.push(['File', file.filename].concat(this._map(file.info, fields, undefined, true)))
       })
+
+      const csvData = await csvString(items)
+      await exportStream.write(csvData)
+      items = []
+      console.log(`heapTotal: ${Math.round(process.memoryUsage().heapTotal / 1e6)}MB, heapUsed: ${Math.round(process.memoryUsage().heapUsed / 1e6)}MB`);
     }
 
-    return items
   }
 
   private async _downloadFiles(

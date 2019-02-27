@@ -4,6 +4,9 @@ import { buildDefaultMenu, MenuEvent } from './menu'
 
 let mainWindow: AppWindow | null = null
 
+// Increase default max memory size
+app.commandLine.appendSwitch('js-flags', '--max_old_space_size=4096');
+
 // quit application when all windows are closed
 app.on('window-all-closed', () => {
   // on macOS it is common for applications to stay open until the user explicitly quits

@@ -3,12 +3,14 @@ import * as path from 'path'
 import { staticPath } from '../lib/path'
 import { format as formatUrl } from 'url'
 import { MenuEvent } from './menu';
+import { Emitter, Disposable } from 'event-kit'
 
 let windowStateKeeper: any | null = null
 const __DEV__ = process.env.NODE_ENV === 'development'
 
 export class AppWindow {
   private window: Electron.BrowserWindow
+  private emitter = new Emitter()
 
   private minWidth: number = 992
   private minHeight: number = 600
@@ -58,6 +60,10 @@ export class AppWindow {
   }
 
   public load() {
+    this.window.webContents.once('did-finish-load', () => {
+      this.emitDidLoad()
+    })
+
     if (__DEV__) {
       this.window.webContents.openDevTools()
       this.window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}`)
@@ -84,6 +90,10 @@ export class AppWindow {
     this.window.on('closed', fn)
   }
 
+  public onDidLoad(fn: () => void): Disposable {
+    return this.emitter.on('did-load', fn)
+  }
+
   public show() {
     this.window.show()
   }
@@ -92,6 +102,10 @@ export class AppWindow {
     this.show()
 
     this.window.webContents.send('menu-event', { name })
+  }
+
+  private emitDidLoad() {
+    this.emitter.emit('did-load', null)
   }
 
 }

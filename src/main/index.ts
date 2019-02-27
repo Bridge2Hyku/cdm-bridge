@@ -51,8 +51,10 @@ function createMainWindow() {
     }
   })
 
+  window.onDidLoad(() => {
+    window.show()
+  })
   window.load()
-  window.show()
 
   mainWindow = window
 }

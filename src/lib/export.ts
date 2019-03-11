@@ -15,6 +15,7 @@ import { basename, dirname } from 'path';
 import { sync } from 'mkdirp'
 import * as filesize from 'filesize';
 
+const __DEV__ = process.env.NODE_ENV === 'development'
 
 export class Exporter {
   private exportAlias: string = ''
@@ -253,9 +254,11 @@ export class Exporter {
       const csvData = await csvString(items)
       await exportStream.write(csvData)
       items = []
-      console.log(`heapTotal: ${Math.round(process.memoryUsage().heapTotal / 1e6)}MB, heapUsed: ${Math.round(process.memoryUsage().heapUsed / 1e6)}MB`);
-    }
 
+      if (__DEV__) {
+        console.log(`heapTotal: ${Math.round(process.memoryUsage().heapTotal / 1e6)}MB, heapUsed: ${Math.round(process.memoryUsage().heapUsed / 1e6)}MB`);
+      }
+    }
   }
 
   private async _downloadFiles(

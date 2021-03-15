@@ -45,7 +45,7 @@ export class App extends React.Component<IAppProps, IAppState> {
 
     ipcRenderer.on(
       'menu-event',
-      (event: Electron.IpcMessageEvent, { name }: { name: MenuEvent }) => {
+      (event: Electron.IpcRendererEvent, { name }: { name: MenuEvent }) => {
         this.onMenuEvent(name)
       }
     )
@@ -112,7 +112,7 @@ export class App extends React.Component<IAppProps, IAppState> {
       case PopupType.About:
         return (
           <About
-            appName={remote.app.getName()}
+            appName={remote.app.name}
             appVersion={remote.app.getVersion()}
             onDismissed={this.onPopupDismissed}
           />

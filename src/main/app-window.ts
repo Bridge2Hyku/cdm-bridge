@@ -35,7 +35,8 @@ export class AppWindow {
       show: false,
       backgroundColor: '#fff',
       webPreferences: {
-        webSecurity: !__DEV__
+        webSecurity: !__DEV__,
+        nodeIntegration: true
       }
     }
 

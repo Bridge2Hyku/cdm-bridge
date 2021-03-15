@@ -43,7 +43,8 @@ export class Map extends React.Component<IMapProps, IMapState> {
       .map(id => crosswalk[id].nicks || [])
       .map(nicks => nicks.filter((nick: string) => nick !== ""))
 
-    const usedNicks = [].concat.apply([], usedNicksArray)
+    const usedNicks = usedNicksArray.filter(e => e.length > 0)
+      .reduce((acc, val) => acc.concat(val), [])
 
     this.setState({ disabledNicks: usedNicks })
   }

@@ -7,10 +7,10 @@ export function buildDefaultMenu(): Menu {
 
   if (__DARWIN__) {
     template.push({
-      label: app.getName(),
+      label: app.name,
       submenu: [
         {
-          label: 'About ' + app.getName(),
+          label: 'About ' + app.name,
           id: 'about',
           click: emit('show-about')
         },
@@ -27,7 +27,7 @@ export function buildDefaultMenu(): Menu {
         },
         separator,
         { role: 'hide' },
-        { role: 'hideothers' },
+        { role: 'hideOthers' },
         { role: 'unhide' },
         separator,
         { role: 'quit' },
@@ -84,7 +84,7 @@ export function buildDefaultMenu(): Menu {
       label: '&Help',
       submenu: [
         {
-          label: '&About ' + app.getName(),
+          label: '&About ' + app.name,
           id: 'about',
           click: emit('show-about')
         }

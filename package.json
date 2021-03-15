@@ -20,8 +20,7 @@
     "productName": "CDM Bridge",
     "appId": "edu.uh.lib.CdmBridge",
     "dmg": {
-      "contents": [
-        {
+      "contents": [{
           "x": 130,
           "y": 220
         },
@@ -57,12 +56,12 @@
     "classnames": "^2.2.6",
     "csv": "^3.1.0",
     "electron-window-state": "^4.1.1",
-    "event-kit": "^2.5.0",
+    "event-kit": "^2.5.3",
     "file-url": "^2.0.2",
     "filesize": "^3.6.1",
     "mkdirp": "^0.5.1",
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0",
     "react-transition-group": "^1.2.0",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
@@ -79,25 +78,25 @@
     "@types/file-url": "^2.0.0",
     "@types/filesize": "^3.6.0",
     "@types/mkdirp": "^0.5.2",
-    "@types/node": "^10.5.1",
+    "@types/node": "^12.12.6",
     "@types/react": "^16.4.1",
     "@types/react-dom": "^16.0.6",
     "@types/react-transition-group": "1.1.1",
     "@types/request": "^2.47.1",
     "@types/request-promise": "^4.1.42",
     "@types/uuid": "^3.4.3",
-    "electron": "2.0.8",
-    "electron-builder": "^20.22.0",
-    "electron-devtools-installer": "^2.2.4",
-    "electron-webpack": "^2.1.2",
-    "electron-webpack-ts": "^2.0.2",
+    "electron": "7.2.4",
+    "electron-builder": "^22.4.1",
+    "electron-devtools-installer": "^3.0.0",
+    "electron-webpack": "^2.8.2",
+    "electron-webpack-ts": "^3.1.0",
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.3",
-    "tslint": "^5.10.0",
-    "typescript": "^2.9.2",
-    "webpack": "^4.8.3"
+    "tslint": "^5.12.0",
+    "typescript": "^3.2.2",
+    "webpack": "~4.42.1"
   },
   "resolutions": {
-    "webpack-sources": "1.1.0"
+    "webpack-sources": "1.4.3"
   }
 }

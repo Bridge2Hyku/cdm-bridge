@@ -388,28 +388,33 @@ export class AppStore extends TypedBaseStore<IAppState> {
     this.emitUpdate()
   }
 
-  public async _completeSaveInDesktop(): Promise<any> {
+  public async _completeSaveInDesktop(folder?: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
       if (!this.selectedAlias) {
         reject('No collection selected')
         return
       }
 
-      const url = remote.dialog.showSaveDialog({
+      const filters = folder ? [] : [
+        {
+          name: "CSV",
+          extensions: ["csv"]
+        }
+      ]
+
+      return remote.dialog.showSaveDialog({
         title: "Export Collection",
         buttonLabel: "Export",
-        filters: [
-          {
-            name: "CSV",
-            extensions: ["csv"]
-          }
-        ]
+        filters: filters
       })
-      if (url) {
-        resolve(url)
-        return
-      }
-      reject('No export location set')
+        .then(result => {
+          const url = result.filePath
+          if (url) {
+            resolve(url)
+            return
+          }
+        })
+        .catch(err => reject('No export location set'))
     })
   }
 

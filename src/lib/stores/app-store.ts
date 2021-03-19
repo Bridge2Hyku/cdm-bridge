@@ -383,6 +383,46 @@ export class AppStore extends TypedBaseStore<IAppState> {
     return Promise.resolve()
   }
 
+  public async _exportBulkrax(location: string): Promise<void> {
+    const exporter = new Exporter(this.contentdmServer)
+    this.selectedView = ViewType.Export
+    this.exportError = []
+    this.exportDone = false
+    this.emitUpdate()
+
+    const pwrid = remote.powerSaveBlocker.start('prevent-app-suspension');
+
+    exporter.bulkrax(
+      this.selectedAlias,
+      location,
+      this.preferences.fields,
+      this.crosswalk[this.selectedAlias],
+      (progress) => {
+        this.exportProgress = progress
+        this.emitUpdate()
+      },
+      (error) => {
+        const exportErrors = Array.from(this.exportError)
+        exportErrors.push(error)
+        this.exportError = exportErrors
+        this.emitUpdate()
+      }
+    )
+      .then(() => {
+        this.exportDone = true
+        this.emitUpdate()
+      })
+      .catch((err) => {
+        this._closeExport()
+        this._pushError(err)
+      })
+      .then(() => {
+        remote.powerSaveBlocker.stop(pwrid)
+      })
+
+    return Promise.resolve()
+  }
+
   public async _closeExport() {
     this.selectedView = ViewType.Collection
     this.emitUpdate()

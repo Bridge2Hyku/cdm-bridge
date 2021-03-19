@@ -136,6 +136,11 @@ export class App extends React.Component<IAppProps, IAppState> {
     this.props.dispatcher.closeFoldout()
   }
 
+  private onSelectBulkrax = () => {
+    this.props.dispatcher.exportBulkrax()
+    this.props.dispatcher.closeFoldout()
+  }
+
   private renderPopup() {
     return (
       <CSSTransitionGroup
@@ -218,6 +223,7 @@ export class App extends React.Component<IAppProps, IAppState> {
             dropdownState={currentState}
             dropdownStateChanged={this.onExportDropdownChanged}
             onSelectExport={this.onSelectExport}
+            onSelectBulkrax={this.onSelectBulkrax}
           />
         </TitleBar>
         {this.renderApp()}

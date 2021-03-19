@@ -58,6 +58,12 @@ export class Dispatcher {
       .catch((reason) => console.warn(reason))
   }
 
+  public exportBulkrax(): Promise<void> {
+    return this.appStore._completeSaveInDesktop(true)
+      .then(location => this.appStore._exportBulkrax(location))
+      .catch((reason) => console.warn(reason))
+  }
+
   public closeExport(): Promise<void> {
     return this.appStore._closeExport()
   }

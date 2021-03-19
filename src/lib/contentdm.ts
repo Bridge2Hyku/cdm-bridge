@@ -80,7 +80,7 @@ export class ContentDm {
           const filesize = statSync(destination).size
           progressCallback(filesize)
         }
-        resolve()
+        resolve(null)
         return
       }
 
@@ -91,7 +91,7 @@ export class ContentDm {
           if (e) {
             reject(e)
           }
-          resolve()
+          resolve(null)
         })
       })
 

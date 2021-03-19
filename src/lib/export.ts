@@ -11,9 +11,10 @@ import {
   createWriteStream,
   WriteStream
 } from 'fs';
-import { basename, dirname } from 'path';
+import { basename, dirname } from 'path'
 import { sync } from 'mkdirp'
-import * as filesize from 'filesize';
+import * as filesize from 'filesize'
+import { v4 } from 'uuid'
 
 const __DEV__ = process.env.NODE_ENV === 'development'
 
@@ -80,6 +81,64 @@ export class Exporter {
       description: `Mapped ${data.records.length} items`,
       subdescription: `Collection total file size: ${filesize(this.totalFileSize(this.files))}`
     })
+  }
+
+  public async bulkrax(
+    alias: string,
+    location: string,
+    fields: ReadonlyArray<IField>,
+    crosswalk: ICrosswalkFieldHash,
+    progressCallback: (progress: IExportProgress) => void,
+    errorCallback: (error: IExportError) => void
+  ): Promise<void> {
+    const errors: Array<IExportError> = []
+    this.exportAlias = alias
+    this.exportCrosswalk = crosswalk
+    this.files = []
+
+    const missing = this._missingFields(fields, crosswalk)
+    if (missing) {
+      return Promise.reject(
+        new Error(missing.toString().replace(/,/gi, "\n"))
+      )
+    }
+
+    try {
+      sync(`${location}/files`)
+    } catch (e) {
+      return Promise.reject(e)
+    }
+
+    progressCallback({ value: undefined, description: 'Getting item records' })
+    const exportStream = createWriteStream(`${location}/metadata.csv`)
+    const data = await this.records(alias)
+
+    await this._processBulkraxRecords(
+      data.records,
+      fields,
+      exportStream,
+      progressCallback,
+      (error: IExportError) => {
+        errors.push(error)
+        errorCallback(error)
+      }
+    )
+    exportStream.end()
+
+    if (errors.length > 0) {
+      this.processErrors(errors, location)
+    }
+
+    if (this.files) {
+      await this._downloadFiles(this.files, `${location}/files/trash.txt`, progressCallback)
+    }
+
+    progressCallback({
+      value: 1,
+      description: `Mapped ${data.records.length} items`,
+      subdescription: `Collection total file size: ${filesize(this.totalFileSize(this.files))}`
+    })
+
   }
 
   private async records(
@@ -258,6 +317,53 @@ export class Exporter {
       if (__DEV__) {
         console.log(`heapTotal: ${Math.round(process.memoryUsage().heapTotal / 1e6)}MB, heapUsed: ${Math.round(process.memoryUsage().heapUsed / 1e6)}MB`);
       }
+    }
+  }
+
+  private async _processBulkraxRecords(
+    records: any,
+    fields: ReadonlyArray<IField>,
+    exportStream: WriteStream,
+    progressCallback: (progress: IExportProgress) => void,
+    errorCallback: (error: IExportError) => void
+  ): Promise<any> {
+
+    let count = 0
+    let items: Array<any> = [['source_identifier']
+      .concat(
+        fields.map((key) => {
+          return key.name.toLowerCase()
+        }),
+        'file'
+      )]
+
+    for (let record of records) {
+      const progressValue = count / records.length
+      progressCallback({
+        value: progressValue,
+        description: `Mapping item ${++count} of ${records.length}`
+      })
+
+      const item = await this.getRecord(record, (cpo, cpototal) => {
+        if (cpototal > 30) { // threshold so the display doesn't get to crazy
+          progressCallback({
+            value: progressValue,
+            description: `Mapping item ${count} of ${records.length}`,
+            subdescription: `Getting compound object item record ${cpo} of ${cpototal}`
+          })
+        }
+      })
+      const filenames: Array<String> = []
+      item.files.map((file: any) => {
+        this.files.push(file)
+        filenames.push(file.filename)
+      })
+
+      items.push([v4()].concat(this._map(item, fields, errorCallback), filenames.join(';')))
+
+      const csvData = await csvString(items)
+      await exportStream.write(csvData)
+      items = []
     }
   }
 

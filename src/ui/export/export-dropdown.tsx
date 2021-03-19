@@ -6,6 +6,7 @@ export type DropdownState = 'open' | 'closed'
 
 interface IExportDropdownProps {
   readonly onSelectExport: (download?: boolean) => void
+  readonly onSelectBulkrax: () => void
   readonly dropdownState: DropdownState
   readonly dropdownStateChanged: (state: DropdownState) => void
   readonly disabled?: boolean
@@ -52,6 +53,7 @@ export class ExportDropdown extends React.Component<IExportDropdownProps, {}> {
         >
           <ExportDropdownList
             onSelectExport={this.props.onSelectExport}
+            onSelectBulkrax={this.props.onSelectBulkrax}
           />
         </div>
       </div>
@@ -78,6 +80,7 @@ export class ExportDropdown extends React.Component<IExportDropdownProps, {}> {
 
 interface IExportDropdownListProps {
   readonly onSelectExport: (download?: boolean) => void
+  readonly onSelectBulkrax: () => void
 }
 
 export class ExportDropdownList extends React.Component<IExportDropdownListProps, {}> {
@@ -88,6 +91,10 @@ export class ExportDropdownList extends React.Component<IExportDropdownListProps
 
   private onExportFiles = (event: React.MouseEvent<HTMLElement>) => {
     this.props.onSelectExport(true)
+  }
+
+  private onExportBulkrax = (event: React.MouseEvent<HTMLElement>) => {
+    this.props.onSelectBulkrax()
   }
 
   public render() {
@@ -108,6 +115,13 @@ export class ExportDropdownList extends React.Component<IExportDropdownListProps
           onClick={this.onExportFiles}
         >
           Metadata and Files
+        </div>
+        <div
+          key="bulkrax"
+          className="export-list-item"
+          onClick={this.onExportBulkrax}
+        >
+          Bulkrax CSV and Files
         </div>
       </div>
     )

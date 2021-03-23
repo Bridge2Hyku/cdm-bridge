@@ -7,7 +7,7 @@
     "email": "slwatkins@uh.edu"
   },
   "homepage": "https://bridge2hyku.github.io/",
-  "version": "1.0.0",
+  "version": "1.1.0-beta.1",
   "license": "Apache-2.0",
   "scripts": {
     "dev": "electron-webpack dev",
@@ -20,7 +20,8 @@
     "productName": "CDM Bridge",
     "appId": "edu.uh.lib.CdmBridge",
     "dmg": {
-      "contents": [{
+      "contents": [
+        {
           "x": 130,
           "y": 220
         },

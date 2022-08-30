@@ -72,7 +72,7 @@ export class ContentDm {
 
     return new Promise((resolve, reject) => {
       let url = this._fileUrl(file.alias, file.pointer)
-      let destination = location + '/' + file.filename
+      let destination = location + '/' + file.alias + '_' + file.filename
       let part = destination + '.part'
 
       if (existsSync(destination)) {

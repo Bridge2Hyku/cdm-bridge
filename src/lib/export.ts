@@ -356,7 +356,7 @@ export class Exporter {
       const filenames: Array<String> = []
       item.files.map((file: any) => {
         this.files.push(file)
-        filenames.push(file.filename)
+        filenames.push(file.alias.replace('/', '') + '_' + file.filename)
       })
 
       items.push([v4()].concat(this._map(item, fields, errorCallback), filenames.join(';')))
